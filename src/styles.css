@@ -1,1 +1,28 @@
-/* You can add global styles to this file, and also import other style files */
+.auth-wrapper {
+  height: 100vh; display: flex; align-items: center; justify-content: center;
+  background-color: var(--soft-beige);
+}
+
+.auth-card {
+  background: white; padding: 50px; border-radius: 24px;
+  width: 100%; max-width: 450px; box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+  text-align: center;
+}
+
+h2 { color: var(--accent-orange); font-size: 2rem; margin-bottom: 30px; }
+
+input {
+  width: 100%; padding: 15px; margin-bottom: 15px;
+  border: 1px solid #e0e0e0; border-radius: 12px; outline: none; box-sizing: border-box;
+}
+
+input:focus { border-color: var(--accent-orange); }
+
+.btn-full { width: 100%; margin-top: 10px; }
+
+.input-row { display: flex; gap: 10px; }
+
+.error { color: red; font-size: 0.8rem; display: block; margin-bottom: 10px; }
+
+.link { margin-top: 20px; font-size: 0.9rem; }
+.link a { color: var(--accent-orange); font-weight: bold; text-decoration: none; }

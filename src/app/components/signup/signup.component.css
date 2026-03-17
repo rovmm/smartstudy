@@ -1,0 +1,228 @@
+/* Import Google Fonts for a modern, study-centric feel */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
+
+:host {
+    display: block;
+    font-family: 'Inter', sans-serif;
+    color: #E2E8F0;
+    --primary: #6366F1;
+    --accent: #8B5CF6;
+    --glass-bg: rgba(30, 41, 59, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --input-bg: rgba(15, 23, 42, 0.6);
+}
+
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #0B0F19;
+    position: relative;
+    overflow: hidden;
+    padding: 2rem;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 500px;
+    padding: 3rem 2.5rem;
+    z-index: 10;
+    position: relative;
+}
+
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    border-radius: 24px;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    margin-bottom: 1.5rem;
+    font-family: 'Outfit', sans-serif;
+}
+
+.auth-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.auth-subtitle {
+    color: #94a3b8;
+    font-size: 1rem;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+label {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #cbd5e1;
+    margin-left: 0.25rem;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 1rem;
+    font-size: 1.1rem;
+    opacity: 0.6;
+}
+
+input {
+    width: 100%;
+    padding: 0.875rem 1rem 0.875rem 3rem;
+    background: var(--input-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    color: white;
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+    background: rgba(15, 23, 42, 0.8);
+}
+
+input::placeholder {
+    color: #64748b;
+}
+
+input.is-invalid {
+    border-color: #ef4444;
+}
+
+.error-feedback {
+    color: #f87171;
+    font-size: 0.85rem;
+    margin-left: 0.25rem;
+    margin-top: 0.25rem;
+}
+
+.mt-4 {
+    margin-top: 1rem;
+}
+
+.btn {
+    padding: 0.875rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    font-family: 'Inter', sans-serif;
+}
+
+.btn-full {
+    width: 100%;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 1.5rem;
+    color: #94a3b8;
+    font-size: 0.95rem;
+}
+
+.auth-link {
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.auth-link:hover {
+    color: var(--primary);
+}
+
+/* Background Blurs */
+.bg-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: 1;
+}
+
+.blob-1 {
+    width: 400px;
+    height: 400px;
+    background: rgba(99, 102, 241, 0.15);
+    top: -100px;
+    right: -100px;
+}
+
+.blob-2 {
+    width: 300px;
+    height: 300px;
+    background: rgba(139, 92, 246, 0.15);
+    bottom: -50px;
+    left: -50px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .form-row {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}

@@ -1,0 +1,91 @@
+<div class="home-container">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo">
+            <span class="logo-icon">🎓</span>
+            <span class="logo-text">SmartStudy</span>
+        </div>
+        <div class="nav-links">
+            <a href="#services" class="nav-link">Services</a>
+            <a href="#ai-tools" class="nav-link">AI Tools</a>
+        </div>
+        <div class="auth-buttons">
+            <a routerLink="/login" class="btn btn-outline">Log In</a>
+            <a routerLink="/signup" class="btn btn-primary">Sign Up</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Master Any Language with <span class="highlight">AI-Powered</span> Learning</h1>
+            <p class="hero-subtitle">
+                Your personalized comfortable study hub. Learn programming, summarize dense courses, and simplify PDFs
+                instantly.
+            </p>
+            <div class="hero-actions">
+                <a routerLink="/signup" class="btn btn-large btn-primary">Start Learning for Free</a>
+                <a href="#services" class="btn btn-large btn-secondary">Explore Services</a>
+            </div>
+        </div>
+        <div class="hero-graphics">
+            <div class="floating-card glass-panel card-1">
+                <div class="card-icon">🧠</div>
+                <div class="card-text">AI Powered Summary</div>
+            </div>
+            <div class="floating-card glass-panel card-2">
+                <div class="card-icon">⚡</div>
+                <div class="card-text">Learn Python & JS</div>
+            </div>
+            <div class="hero-glow"></div>
+        </div>
+    </header>
+
+    <!-- Programming Languages Section -->
+    <section id="services" class="services-section">
+        <div class="section-header">
+            <h2 class="section-title">Programming Languages</h2>
+            <p class="section-desc">Master the world's most popular tech stacks with our interactive courses.</p>
+        </div>
+
+        <div class="languages-grid">
+            <div class="language-card glass-panel" *ngFor="let lang of languages" [style.--glow-color]="lang.color">
+                <div class="lang-icon">{{lang.icon}}</div>
+                <h3 class="lang-name">{{lang.name}}</h3>
+                <p class="lang-desc">{{lang.description}}</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Features Section -->
+    <section id="ai-tools" class="ai-section">
+        <div class="section-header">
+            <h2 class="section-title">Smart AI Study Assistants</h2>
+            <p class="section-desc">Stop struggling with massive textbooks and long videos. Let AI do the heavy lifting.
+            </p>
+        </div>
+
+        <div class="ai-features-grid">
+            <div class="ai-feature-card glass-panel" *ngFor="let feature of aiFeatures">
+                <div class="feature-icon-wrapper">
+                    <span class="feature-icon">{{feature.icon}}</span>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">{{feature.title}}</h3>
+                    <p class="feature-desc">{{feature.description}}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="logo">
+                <span class="logo-icon">🎓</span>
+                <span class="logo-text">SmartStudy</span>
+            </div>
+            <p class="footer-text">© 2026 SmartStudy. All rights reserved.</p>
+        </div>
+    </footer>
+</div>

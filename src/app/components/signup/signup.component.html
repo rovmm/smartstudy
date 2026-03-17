@@ -1,0 +1,81 @@
+<div class="auth-container">
+    <div class="auth-card glass-panel">
+
+        <div class="auth-header">
+            <a routerLink="/" class="logo">
+                <span class="logo-icon">🎓</span>
+                <span class="logo-text">SmartStudy</span>
+            </a>
+            <h2 class="auth-title">Create an Account</h2>
+            <p class="auth-subtitle">Join thousands of students mastering subjects with AI.</p>
+        </div>
+
+        <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="auth-form">
+
+            <div class="form-row">
+                <div class="form-group flex-1">
+                    <label for="firstName">First Name</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="firstName" formControlName="firstName" placeholder="John"
+                            [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }" />
+                    </div>
+                    <div *ngIf="submitted && f['firstName'].errors" class="error-feedback">
+                        <div *ngIf="f['firstName'].errors['required']">First Name is required</div>
+                    </div>
+                </div>
+
+                <div class="form-group flex-1">
+                    <label for="lastName">Last Name</label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">👤</span>
+                        <input type="text" id="lastName" formControlName="lastName" placeholder="Doe"
+                            [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }" />
+                    </div>
+                    <div *ngIf="submitted && f['lastName'].errors" class="error-feedback">
+                        <div *ngIf="f['lastName'].errors['required']">Last Name is required</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">✉️</span>
+                    <input type="email" id="email" formControlName="email" placeholder="student@example.com"
+                        [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" />
+                </div>
+                <div *ngIf="submitted && f['email'].errors" class="error-feedback">
+                    <div *ngIf="f['email'].errors['required']">Email is required</div>
+                    <div *ngIf="f['email'].errors['email']">Email must be a valid email address containing @</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="password" formControlName="password" placeholder="Min. 8 characters"
+                        [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" />
+                </div>
+                <div *ngIf="submitted && f['password'].errors" class="error-feedback">
+                    <div *ngIf="f['password'].errors['required']">Password is required</div>
+                    <div *ngIf="f['password'].errors['minlength']">Password must be at least 8 characters</div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full mt-4">
+                Sign Up
+            </button>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a routerLink="/login" class="auth-link">Log in</a></p>
+            </div>
+        </form>
+
+    </div>
+
+    <!-- Decorative Background Elements -->
+    <div class="bg-glow blob-1"></div>
+    <div class="bg-glow blob-2"></div>
+</div>
