@@ -19,6 +19,9 @@ export class AuthService {
     window.localStorage.removeItem('auth-token'); // On nettoie l'ancien token s'il existe
     window.localStorage.setItem('auth-token', token); // On enregistre le nouveau
   }
+  register(data: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, data);
+}
 
   // Optionnel : Méthode pour récupérer le token plus tard
   getToken(): string | null {

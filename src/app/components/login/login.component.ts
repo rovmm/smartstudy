@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service'; 
+import { AuthService } from '../../services/auth.service';
 
 @Component({
     selector: 'app-login',
@@ -14,11 +14,12 @@ import { AuthService } from '../../services/auth.service';
 export class LoginComponent {
     loginForm: FormGroup;
     submitted = false;
-    errorMessage = ''; 
+    errorMessage = '';
+    isLoading = false;
 
     constructor(
-        private fb: FormBuilder, 
-        private authService: AuthService, 
+        private fb: FormBuilder,
+        private authService: AuthService,
         private router: Router
     ) {
         this.loginForm = this.fb.group({
@@ -31,24 +32,28 @@ export class LoginComponent {
 
     onSubmit() {
         this.submitted = true;
-        this.errorMessage = ''; 
+        this.errorMessage = '';
 
         if (this.loginForm.invalid) {
             return;
         }
 
+        this.isLoading = true;
+
         this.authService.login(this.loginForm.value).subscribe({
-            next: (data: any) => { // : any corrige l'erreur sur data
+            next: (data: any) => {
+                this.isLoading = false;
                 console.log('Connexion réussie !', data);
-                
-                // On enregistre le token (assurez-vous que le backend renvoie accessToken)
-                if (data && data.accessToken) {
-                    this.authService.saveToken(data.accessToken);
+
+                if (data && data.token) {        // ← "token" pas "accessToken" !
+                    this.authService.saveToken(data.token);
+                    localStorage.setItem('user', JSON.stringify(data));
                 }
-                
-                this.router.navigate(['/home']); 
+
+                this.router.navigate(['/home']);
             },
-            error: (err: any) => { // : any corrige l'erreur sur err
+            error: (err: any) => {
+                this.isLoading = false;
                 console.error('Erreur de connexion', err);
                 this.errorMessage = "Email ou mot de passe incorrect.";
             }
