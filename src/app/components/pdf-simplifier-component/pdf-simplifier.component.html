@@ -1,0 +1,66 @@
+<div class="pdf-simplifier-container">
+  <div class="content-wrapper">
+    <h1 class="page-title">PDF Simplifier</h1>
+    
+    <div class="layout-grid">
+      
+      <!-- Upload Zone (Left) -->
+      <div class="glass-panel upload-zone" 
+           [class.drag-active]="isDragging"
+           (dragover)="onDragOver($event)"
+           (dragleave)="onDragLeave($event)"
+           (drop)="onDrop($event)">
+        
+        <ng-container *ngIf="!isProcessing; else processingTemplate">
+          <div class="upload-content">
+            <div class="icon-wrapper">
+              <span class="doc-icon">📄</span>
+            </div>
+            <h2>Drag & Drop your document</h2>
+            <p>PDF or Word, max 15MB</p>
+            
+            <input type="file" #fileInput (change)="onFileSelected($event)" accept=".pdf,.doc,.docx" hidden />
+            <button class="btn btn-primary mt-4" (click)="fileInput.click()">Select File</button>
+          </div>
+        </ng-container>
+
+        <ng-template #processingTemplate>
+          <div class="processing-content">
+            <div class="spinner"></div>
+            <p class="processing-text">AI is analyzing your document and performing OCR...</p>
+          </div>
+        </ng-template>
+
+      </div>
+
+      <!-- Result Zone (Right) -->
+      <div class="glass-panel result-zone" *ngIf="showResult">
+        <div class="result-header">
+          <h3>✨ AI Smart Summary</h3>
+        </div>
+        
+        <div class="scrollable-content">
+          <p class="summary-text">{{ summaryText }}</p>
+        </div>
+
+        <div class="result-footer">
+          <button class="btn btn-outline" (click)="downloadSummary()">
+            <span class="icon">⬇️</span> Download Summary
+          </button>
+          <button class="btn btn-primary" (click)="generateQuiz()">
+            <span class="icon">📝</span> Generate Quiz
+          </button>
+        </div>
+      </div>
+
+      <!-- Placeholder if no result yet -->
+      <div class="glass-panel empty-result-zone" *ngIf="!showResult">
+        <div class="placeholder-content">
+          <span class="placeholder-icon">🤖</span>
+          <p>Your AI-generated summary will appear here.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

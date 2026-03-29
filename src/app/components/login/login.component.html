@@ -2,7 +2,7 @@
     <div class="auth-card glass-panel">
 
         <div class="auth-header">
-            <a routerLink="/" class="logo">
+            <a routerLink="/" class="logo" style="text-decoration: none;">
                 <span class="logo-icon">🎓</span>
                 <span class="logo-text">SmartStudy</span>
             </a>
@@ -16,26 +16,18 @@
                 <label for="email">Email</label>
                 <div class="input-wrapper">
                     <span class="input-icon">✉️</span>
-                    <input type="email" id="email" formControlName="email" placeholder="student@example.com"
-                        [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" />
+                    <input type="email" id="email" formControlName="email" placeholder="student@example.com" />
                 </div>
-                <div *ngIf="submitted && f['email'].errors" class="error-feedback">
-                    <div *ngIf="f['email'].errors['required']">Email is required</div>
-                    <div *ngIf="f['email'].errors['email']">Email must be a valid email address containing @</div>
-                </div>
+                <small *ngIf="submitted && f['email'].errors" class="error-text">Email valide requis</small>
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
                 <div class="input-wrapper">
                     <span class="input-icon">🔒</span>
-                    <input type="password" id="password" formControlName="password" placeholder="Min. 8 characters"
-                        [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" />
+                    <input type="password" id="password" formControlName="password" placeholder="Min. 8 characters" />
                 </div>
-                <div *ngIf="submitted && f['password'].errors" class="error-feedback">
-                    <div *ngIf="f['password'].errors['required']">Password is required</div>
-                    <div *ngIf="f['password'].errors['minlength']">Password must be at least 8 characters</div>
-                </div>
+                <small *ngIf="submitted && f['password'].errors" class="error-text">8 caractères minimum</small>
             </div>
 
             <div class="form-actions">
@@ -49,11 +41,10 @@
             <div class="auth-footer">
                 <p>Don't have an account? <a routerLink="/signup" class="auth-link">Sign up</a></p>
             </div>
-        </form>
 
+        </form>
     </div>
 
-    <!-- Decorative Background Elements -->
     <div class="bg-glow blob-1"></div>
     <div class="bg-glow blob-2"></div>
 </div>

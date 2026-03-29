@@ -21,37 +21,34 @@ export class LoginComponent {
         private authService: AuthService, 
         private router: Router
     ) {
+        // Initialisation du formulaire avec les validations
         this.loginForm = this.fb.group({
             email: ['', [Validators.required, Validators.email]],
             password: ['', [Validators.required, Validators.minLength(8)]]
         });
     }
 
+    // Accès facile aux contrôles du formulaire dans le HTML
     get f() { return this.loginForm.controls; }
 
     onSubmit() {
         this.submitted = true;
         this.errorMessage = ''; 
 
+        // 1. Vérification de la validité
         if (this.loginForm.invalid) {
+            console.log("Formulaire invalide");
             return;
         }
 
-        this.authService.login(this.loginForm.value).subscribe({
-            next: (data: any) => { // : any corrige l'erreur sur data
-                console.log('Connexion réussie !', data);
-                
-                // On enregistre le token (assurez-vous que le backend renvoie accessToken)
-                if (data && data.accessToken) {
-                    this.authService.saveToken(data.accessToken);
-                }
-                
-                this.router.navigate(['/home']); 
-            },
-            error: (err: any) => { // : any corrige l'erreur sur err
-                console.error('Erreur de connexion', err);
-                this.errorMessage = "Email ou mot de passe incorrect.";
-            }
-        });
+        // --- SIMULATION DE CONNEXION ---
+        console.log("Connexion en cours...");
+        
+        // Stockage du token
+        localStorage.setItem('accessToken', 'fake-token-123');
+
+        // Redirection vers le chemin parent + enfant
+        // C'est ici que l'erreur de "refresh" (redirection vers **) se produisait
+        this.router.navigate(['/app/pdf-simplifier']);
     }
 }

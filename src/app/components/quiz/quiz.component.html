@@ -1,0 +1,67 @@
+<div class="page-container">
+  <div class="content-wrapper">
+    <h1 class="page-title">✨ AI <span>Quiz Generator</span></h1>
+    
+    <div class="layout-grid">
+      <!-- Configuration Zone -->
+      <div class="glass-panel config-zone">
+        <h2>Configure Your Test</h2>
+        <p class="subtitle">Select a programming language and difficulty.</p>
+        
+        <div class="form-group mt-4">
+          <label>Programming Language</label>
+          <select [(ngModel)]="selectedLanguage" class="custom-select">
+            <option value="" disabled selected>Select a language...</option>
+            <option *ngFor="let lang of languages" [value]="lang">{{ lang }}</option>
+          </select>
+        </div>
+
+        <div class="form-group mt-4">
+          <label>Difficulty Level</label>
+          <div class="level-buttons">
+            <button class="level-btn" [class.active]="selectedLevel === 'Easy'" (click)="selectedLevel = 'Easy'">Easy</button>
+            <button class="level-btn" [class.active]="selectedLevel === 'Medium'" (click)="selectedLevel = 'Medium'">Medium</button>
+            <button class="level-btn" [class.active]="selectedLevel === 'Hard'" (click)="selectedLevel = 'Hard'">Hard</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary generate-btn mt-5" 
+                [disabled]="!selectedLanguage || !selectedLevel" 
+                (click)="generateQuiz()">
+          <span class="icon">🤖</span> Generate My Quiz
+        </button>
+      </div>
+
+      <!-- Result Zone -->
+      <div class="glass-panel result-zone">
+        <ng-container *ngIf="!isProcessing && !showQuiz">
+          <div class="placeholder-content">
+            <span class="placeholder-icon">🎯</span>
+            <p>Your personalized AI test will appear here.</p>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="isProcessing">
+          <div class="processing-content">
+            <div class="spinner"></div>
+            <p>Crafting {{ selectedLevel }} questions for {{ selectedLanguage }}...</p>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="showQuiz">
+          <div class="quiz-content">
+            <div class="quiz-header">
+              <h3>{{ selectedLanguage }} - {{ selectedLevel }} Test</h3>
+            </div>
+            <div class="question-item" *ngFor="let q of mockQuestions; let i = index">
+              <h4>{{ i + 1 }}. {{ q.question }}</h4>
+              <div class="options-grid">
+                <button class="option-btn" *ngFor="let opt of q.options">{{ opt }}</button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
