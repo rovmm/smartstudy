@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
 
-// 1. Public Pages (Full Screen)
-import { HomeComponent } from './pages/home/home.component';        // <-- Your code above
-import { LoginComponent } from './components/login/login.component';     // <-- From my last message
-import { SignupComponent } from './components/signup/signup.component';  // <-- From my last message
+// 1. Pages Publiques (Plein écran)
+import { HomeComponent } from './pages/home/home.component';
+import { LoginComponent } from './components/login/login.component';
+import { SignupComponent } from './components/signup/signup.component';
 
-// 2. Private Dashboard Layout (SideBar + Content)
+// 2. Dashboard Privé (Sidebar + Contenu)
 import { MainLayoutComponent } from './components/main-layout-component/main-layout.component';
 import { Dashboard } from './components/dashboard/dashboard.component';
 import { PdfSimplifierComponent } from './components/pdf-simplifier-component/pdf-simplifier.component';
@@ -13,31 +13,29 @@ import { QuizComponent } from './components/quiz/quiz.component';
 
 export const routes: Routes = [
   // ===================================
-  // PUBLIC ROUTES
+  // ROUTES PUBLIQUES
   // ===================================
-  // This makes your Home Page show up FIRST! (when url is empty)
   { path: '', component: HomeComponent },
-  
-  // These are your standalone auth pages
+  { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
 
   // ===================================
-  // PRIVATE ROUTES (Inside the Sidebar)
+  // ROUTES PRIVÉES (À l'intérieur de la Sidebar)
   // ===================================
   {
     path: 'app',
-    component: MainLayoutComponent, // This wrapper has the Sidebar
+    component: MainLayoutComponent, // Ce composant contient ta Sidebar
     children: [
       { path: 'dashboard', component: Dashboard },
       { path: 'pdf-simplifier', component: PdfSimplifierComponent },
       { path: 'quiz', component: QuizComponent },
       
-      // Default fallback inside the app
+      // Redirection par défaut à l'intérieur de l'app
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },
 
-  // Fallback for any incorrect URL (redirect to Home page)
+  // Redirection en cas d'URL incorrecte
   { path: '**', redirectTo: '' }
 ];

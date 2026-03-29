@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../services/auth.service'; 
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -15,6 +15,7 @@ export class SignupComponent {
   signupForm: FormGroup;
   submitted = false;
   errorMessage: string = '';
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -29,7 +30,6 @@ export class SignupComponent {
     });
   }
 
-  // Getter pour faciliter l'accès aux contrôles dans le HTML
   get f() { return this.signupForm.controls; }
 
   onSubmit(): void {
@@ -40,13 +40,25 @@ export class SignupComponent {
       return;
     }
 
-    // On envoie les données au service
-    this.authService.login(this.signupForm.value).subscribe({
+    this.isLoading = true;
+
+    const { firstName, lastName, email, password } = this.signupForm.value;
+
+    // ← Combine firstName + lastName en fullName
+    const payload = {
+      fullName: `${firstName} ${lastName}`,
+      email: email,
+      password: password
+    };
+
+    this.authService.register(payload).subscribe({
       next: (response: any) => {
+        this.isLoading = false;
         console.log("Inscription réussie !", response);
         this.router.navigate(['/login']);
       },
       error: (err: any) => {
+        this.isLoading = false;
         console.error("Erreur lors de l'inscription", err);
         this.errorMessage = "Une erreur est survenue lors de l'inscription.";
       }
