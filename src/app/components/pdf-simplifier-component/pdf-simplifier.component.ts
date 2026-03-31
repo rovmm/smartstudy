@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PdfService } from '../../services/pdf.service';
 
 @Component({
   selector: 'app-pdf-simplifier',
@@ -13,48 +14,57 @@ export class PdfSimplifierComponent {
   isProcessing = false;
   showResult = false;
   summaryText = '';
+  fileName = '';
+  pageCount = 0;
+  errorMessage = '';
 
-  onDragOver(event: DragEvent) {
-    event.preventDefault();
-    this.isDragging = true;
-  }
+  constructor(
+    private pdfService: PdfService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
-  onDragLeave(event: DragEvent) {
-    event.preventDefault();
-    this.isDragging = false;
-  }
-
+  onDragOver(event: DragEvent) { event.preventDefault(); this.isDragging = true; }
+  onDragLeave(event: DragEvent) { event.preventDefault(); this.isDragging = false; }
   onDrop(event: DragEvent) {
     event.preventDefault();
     this.isDragging = false;
-    if (event.dataTransfer?.files?.length) {
-      this.processFile(event.dataTransfer.files[0]);
-    }
+    if (event.dataTransfer?.files?.length) this.processFile(event.dataTransfer.files[0]);
   }
-
   onFileSelected(event: any) {
-    if (event.target.files?.length) {
-      this.processFile(event.target.files[0]);
-    }
+    if (event.target.files?.length) this.processFile(event.target.files[0]);
   }
 
   processFile(file: File) {
     this.isProcessing = true;
     this.showResult = false;
-    
-    // Simulate 3 seconds upload and OCR parsing
-    setTimeout(() => {
-      this.isProcessing = false;
-      this.showResult = true;
-      this.summaryText = "This document presents an overview of core programming concepts, focusing heavily on application architecture and database modeling. Key takeaways:\\n\\n1. Monolithic vs Microservices: Microservices provide higher scalability and independent deployments, whereas monolithic architectures are easier to develop and test initially.\\n2. Database Indexing: Critical for optimizing query performance but introduces overhead on write operations.\\n3. Asynchronous Programming: Vital for maintaining responsive user interfaces by preventing main-thread blocking.\\n\\nConclusion: Designing robust systems requires balancing simplicity, performance, and long-term maintainability.";
-    }, 3000);
-  }
+    this.errorMessage = '';
+    this.summaryText = '';
+    this.cdr.detectChanges();
 
-  generateQuiz() {
-    console.log('Generate Quiz clicked');
+    this.pdfService.summarizePdf(file).subscribe({
+      next: (data: any) => {
+        this.isProcessing = false;
+        this.showResult = true;
+        this.summaryText = data.summary;
+        this.fileName = data.fileName;
+        this.pageCount = data.pageCount;
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        this.isProcessing = false;
+        this.errorMessage = err?.error?.message || 'Erreur.';
+        this.cdr.detectChanges();
+      }
+    });
   }
 
   downloadSummary() {
-    console.log('Download Summary clicked');
+    const blob = new Blob([this.summaryText], { type: 'text/plain' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `summary-${this.fileName}.txt`;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 }

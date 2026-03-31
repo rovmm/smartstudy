@@ -1,0 +1,15 @@
+<div class="coding-container">
+  <div #editorContainer class="editor-box"></div>
+
+  <div class="actions">
+    <button (click)="runCode()" [disabled]="isLoading">
+      {{ isLoading ? 'Running...' : 'Run Code' }}
+    </button>
+  </div>
+
+  <p class="error-msg" *ngIf="validationError">{{ validationError }}</p>
+
+  <div class="terminal" *ngIf="output" [ngClass]="{'error-output': isError}">
+    <pre>{{ output }}</pre>
+  </div>
+</div>

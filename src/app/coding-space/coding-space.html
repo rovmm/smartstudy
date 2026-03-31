@@ -1,0 +1,83 @@
+<div class="coding-space">
+
+  <!-- Header -->
+  <header class="coding-space__header">
+    <h1 class="coding-space__title">
+      <span class="coding-space__icon">&#9654;</span> Coding Space
+    </h1>
+    <p class="coding-space__subtitle">Write, run, and debug code in your browser.</p>
+  </header>
+
+  <!-- Toolbar: Language selector + Run button -->
+  <div class="coding-space__toolbar">
+
+    <!-- Language Dropdown -->
+    <div class="toolbar__group">
+      <label for="language-select" class="toolbar__label">Language</label>
+      <select
+        id="language-select"
+        [(ngModel)]="selectedLanguage"
+        class="toolbar__select"
+        [disabled]="isLoading"
+      >
+        <option *ngFor="let lang of languages" [value]="lang">
+          {{ lang | titlecase }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="toolbar__actions">
+      <button
+        class="btn btn--run"
+        (click)="runCode()"
+        [disabled]="isLoading"
+      >
+        <span *ngIf="!isLoading">&#9654; Run Code</span>
+        <span *ngIf="isLoading" class="btn__spinner">Running...</span>
+      </button>
+
+      <button
+        class="btn btn--clear"
+        (click)="clearOutput()"
+        [disabled]="isLoading"
+      >
+        Clear Output
+      </button>
+    </div>
+  </div>
+
+  <!-- Validation Error -->
+  <div *ngIf="validationError" class="coding-space__validation-error">
+    &#9888; {{ validationError }}
+  </div>
+
+  <!-- Editor + Output Panel -->
+  <div class="coding-space__workspace">
+
+    <!-- CodeMirror Editor -->
+    <div class="coding-space__editor-wrapper">
+      <div class="panel-label">Editor</div>
+      <div #editorContainer class="coding-space__editor"></div>
+    </div>
+
+    <!-- Output Panel -->
+    <div class="coding-space__output-wrapper">
+      <div class="panel-label">Output</div>
+      <div
+        class="coding-space__output"
+        [class.coding-space__output--error]="isError"
+        [class.coding-space__output--success]="!isError && output"
+      >
+        <pre *ngIf="output; else emptyOutput">{{ output }}</pre>
+        <ng-template #emptyOutput>
+          <span class="coding-space__output--placeholder">
+            Output will appear here after running your code...
+          </span>
+        </ng-template>
+      </div>
+    </div>
+
+  </div>
+
+</div>
