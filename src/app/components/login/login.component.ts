@@ -38,21 +38,39 @@ export class LoginComponent {
             return;
         }
 
+        // --- DÉBUT DU MODE TEST (SIMULATION) ---
+        // Cette partie te permet de tester tes pages sans le backend
+        console.log("Mode TEST activé : Redirection directe vers le dashboard");
         this.isLoading = true;
 
-        // On utilise la VRAIE méthode de ton binôme qui appelle le backend
+        setTimeout(() => {
+            this.isLoading = false;
+            
+            // On simule le stockage d'un token pour ne pas bloquer l'app
+            const fakeToken = 'dummy-token-123';
+            this.authService.saveToken(fakeToken);
+            localStorage.setItem('user', JSON.stringify({ email: this.loginForm.value.email, role: 'test' }));
+
+            // Redirection immédiate vers tes nouvelles pages
+            this.router.navigate(['/app/dashboard']); 
+        }, 500); // Petit délai de 0.5s pour voir le chargement
+        // --- FIN DU MODE TEST ---
+
+
+        /* ==========================================================
+           ANCIEN CODE - À RÉACTIVER QUAND LE BACKEND EST PRÊT
+           ==========================================================
+        
+        this.isLoading = true;
+
         this.authService.login(this.loginForm.value).subscribe({
             next: (data: any) => {
                 this.isLoading = false;
                 console.log('Connexion réussie !', data);
 
-                // On utilise la méthode saveToken de ton binôme pour être cohérent
                 if (data && data.token) {
                     this.authService.saveToken(data.token);
-                    // On stocke l'utilisateur si besoin
                     localStorage.setItem('user', JSON.stringify(data));
-                    
-                    // REDIRECTION : On va vers ton nouveau dashboard après succès
                     this.router.navigate(['/app/dashboard']); 
                 }
             },
@@ -62,5 +80,6 @@ export class LoginComponent {
                 this.errorMessage = "Email ou mot de passe incorrect.";
             }
         });
+        ========================================================== */
     }
 }

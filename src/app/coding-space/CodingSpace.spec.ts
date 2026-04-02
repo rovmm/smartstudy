@@ -1,19 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { HttpClientModule } from '@angular/common/http';
+import { CodingSpaceComponent } from './coding-space'; // Vérifie bien que le fichier source est dans le même dossier
 
-import { CodingSpace } from './coding-space';
-
-describe('CodingSpace', () => {
-  let component: CodingSpace;
-  let fixture: ComponentFixture<CodingSpace>;
+describe('CodingSpaceComponent', () => {
+  let component: CodingSpaceComponent;
+  let fixture: ComponentFixture<CodingSpaceComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CodingSpace],
+      // On importe le composant ET le module HTTP pour le service
+      imports: [CodingSpaceComponent, HttpClientModule], 
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CodingSpace);
+    fixture = TestBed.createComponent(CodingSpaceComponent);
     component = fixture.componentInstance;
-    await fixture.whenStable();
+    fixture.detectChanges();
   });
 
   it('should create', () => {

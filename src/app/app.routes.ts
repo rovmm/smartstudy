@@ -4,6 +4,7 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { SignupComponent } from './components/signup/signup.component';
+import { CodingSpaceComponent } from './coding-space/coding-space';
 
 // 2. Dashboard Privé (Sidebar + Contenu)
 import { MainLayoutComponent } from './components/main-layout-component/main-layout.component';
@@ -30,6 +31,9 @@ export const routes: Routes = [
       { path: 'dashboard', component: Dashboard },
       { path: 'pdf-simplifier', component: PdfSimplifierComponent },
       { path: 'quiz', component: QuizComponent },
+      
+      // AJOUT ICI : La route pour ton espace de code
+      { path: 'coding-space', component: CodingSpaceComponent },
       
       // Redirection par défaut à l'intérieur de l'app
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }

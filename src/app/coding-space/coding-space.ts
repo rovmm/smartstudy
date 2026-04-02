@@ -14,15 +14,14 @@ import { EditorState } from '@codemirror/state';
 import { EditorView, basicSetup } from 'codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { oneDark } from '@codemirror/theme-one-dark';
+import { python } from '@codemirror/lang-python';
+import { cpp } from '@codemirror/lang-cpp';
+import { java } from '@codemirror/lang-java';
 
 import { CodeExecutionService, CodeResponse } from '../services/CodeExecutionService';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 
-/**
- * CodingSpaceComponent — main editor component.
- * Hosts the CodeMirror editor, language selector, run button, and output panel.
- */
 @Component({
   selector: 'app-coding-space',
   standalone: true,
@@ -30,61 +29,51 @@ import { of } from 'rxjs';
   templateUrl: './coding-space.html',
   styleUrls: ['./coding-space.css']
 })
-export class CodingSpaceComponent name {
-  constructor(parameters) {
-    
-  }
-} implements OnInit, AfterViewInit, OnDestroy {
+export class CodingSpaceComponent implements OnInit, AfterViewInit, OnDestroy {
 
-  // Reference to the DOM element where CodeMirror will mount
   @ViewChild('editorContainer') editorContainer!: ElementRef;
-
-  // CodeMirror EditorView instance
   private editorView!: EditorView;
 
-  // Available languages for the dropdown
-  languages = ['javascript'];
-
-  // Currently selected language
+  languages = ['javascript', 'python', 'cpp', 'java'];
   selectedLanguage = 'javascript';
-
-  // Output panel state
   output: string = '';
   isError: boolean = false;
   isLoading: boolean = false;
-
-  // Validation message
   validationError: string = '';
+
+  // --- DICTIONNAIRE DES CODES PAR DÉFAUT ---
+  defaultCodes: { [key: string]: string } = {
+    javascript: '// Write your JavaScript code here\nconsole.log("Hello, Coding Space!");',
+    python: '# Write your Python code here\nprint("Hello, Coding Space!")',
+    cpp: '// Write your C++ code here\n#include <iostream>\n\nint main() {\n    std::cout << "Hello, Coding Space!" << std::endl;\n    return 0;\n}',
+    java: '// Write your Java code here\npublic class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, Coding Space!");\n    }\n}'
+  };
 
   constructor(private codeExecutionService: CodeExecutionService) {}
 
   ngOnInit(): void {}
 
   ngAfterViewInit(): void {
-    // Initialize CodeMirror editor after the view is ready
     this.initializeEditor();
   }
 
   ngOnDestroy(): void {
-    // Clean up the editor when the component is destroyed
     if (this.editorView) {
       this.editorView.destroy();
     }
   }
 
-  /**
-   * Initializes the CodeMirror 6 editor with JavaScript support and dark theme.
-   */
   private initializeEditor(): void {
-    const startCode = `// Write your JavaScript code here\nconsole.log("Hello, Coding Space!");`;
+    // On utilise le code par défaut initial (JS)
+    const startCode = this.defaultCodes['javascript'];
 
     const state = EditorState.create({
       doc: startCode,
       extensions: [
-        basicSetup,                 // Line numbers, bracket matching, etc.
-        javascript(),               // JavaScript syntax highlighting
-        oneDark,                    // Dark theme
-        EditorView.lineWrapping,    // Wrap long lines
+        basicSetup,
+        javascript(),
+        oneDark,
+        EditorView.lineWrapping,
       ]
     });
 
@@ -94,23 +83,43 @@ export class CodingSpaceComponent name {
     });
   }
 
-  /**
-   * Gets the current code from the CodeMirror editor.
-   */
+  private getLanguageExtension(lang: string) {
+    switch (lang) {
+      case 'python': return python();
+      case 'cpp': return cpp();
+      case 'java': return java();
+      default: return javascript();
+    }
+  }
+
+  // --- MODIFICATION ICI : CHANGE LE TEXTE ET LA COLORATION ---
+  onLanguageChange(): void {
+    if (this.editorView) {
+      // On récupère le template correspondant au nouveau langage
+      const newCode = this.defaultCodes[this.selectedLanguage] || '';
+      
+      const state = EditorState.create({
+        doc: newCode, // Injection du nouveau texte
+        extensions: [
+          basicSetup,
+          this.getLanguageExtension(this.selectedLanguage),
+          oneDark,
+          EditorView.lineWrapping,
+        ]
+      });
+      this.editorView.setState(state);
+    }
+  }
+
   private getEditorCode(): string {
     return this.editorView.state.doc.toString();
   }
 
-  /**
-   * Called when the user clicks "Run Code".
-   * Validates input, calls the backend, and displays the result.
-   */
   runCode(): void {
     const code = this.getEditorCode().trim();
     this.validationError = '';
     this.output = '';
 
-    // Basic client-side validation
     if (!code) {
       this.validationError = 'Please write some code before running.';
       return;
@@ -126,7 +135,6 @@ export class CodingSpaceComponent name {
 
     this.codeExecutionService.executeCode(request)
       .pipe(
-        // Handle HTTP-level errors (network issues, 5xx, etc.)
         catchError(err => {
           const errorResponse: CodeResponse = {
             success: false,
@@ -150,9 +158,6 @@ export class CodingSpaceComponent name {
       });
   }
 
-  /**
-   * Clears the output panel.
-   */
   clearOutput(): void {
     this.output = '';
     this.isError = false;
