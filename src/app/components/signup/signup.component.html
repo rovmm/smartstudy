@@ -1,81 +1,63 @@
-<div class="auth-container">
-    <div class="auth-card glass-panel">
+<div class="auth-page">
+  <div class="auth-bg-effects">
+    <div class="auth-orb auth-orb-1"></div>
+    <div class="auth-orb auth-orb-2"></div>
+  </div>
 
-        <div class="auth-header">
-            <a routerLink="/" class="logo">
-                <span class="logo-icon">🎓</span>
-                <span class="logo-text">SmartStudy</span>
-            </a>
-            <h2 class="auth-title">Create an Account</h2>
-            <p class="auth-subtitle">Join thousands of students mastering subjects with AI.</p>
-        </div>
-
-        <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="auth-form">
-
-            <div class="form-row">
-                <div class="form-group flex-1">
-                    <label for="firstName">First Name</label>
-                    <div class="input-wrapper">
-                        <span class="input-icon">👤</span>
-                        <input type="text" id="firstName" formControlName="firstName" placeholder="John"
-                            [ngClass]="{ 'is-invalid': submitted && f['firstName'].errors }" />
-                    </div>
-                    <div *ngIf="submitted && f['firstName'].errors" class="error-feedback">
-                        <div *ngIf="f['firstName'].errors['required']">First Name is required</div>
-                    </div>
-                </div>
-
-                <div class="form-group flex-1">
-                    <label for="lastName">Last Name</label>
-                    <div class="input-wrapper">
-                        <span class="input-icon">👤</span>
-                        <input type="text" id="lastName" formControlName="lastName" placeholder="Doe"
-                            [ngClass]="{ 'is-invalid': submitted && f['lastName'].errors }" />
-                    </div>
-                    <div *ngIf="submitted && f['lastName'].errors" class="error-feedback">
-                        <div *ngIf="f['lastName'].errors['required']">Last Name is required</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="email">Email</label>
-                <div class="input-wrapper">
-                    <span class="input-icon">✉️</span>
-                    <input type="email" id="email" formControlName="email" placeholder="student@example.com"
-                        [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" />
-                </div>
-                <div *ngIf="submitted && f['email'].errors" class="error-feedback">
-                    <div *ngIf="f['email'].errors['required']">Email is required</div>
-                    <div *ngIf="f['email'].errors['email']">Email must be a valid email address containing @</div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="password">Password</label>
-                <div class="input-wrapper">
-                    <span class="input-icon">🔒</span>
-                    <input type="password" id="password" formControlName="password" placeholder="Min. 8 characters"
-                        [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" />
-                </div>
-                <div *ngIf="submitted && f['password'].errors" class="error-feedback">
-                    <div *ngIf="f['password'].errors['required']">Password is required</div>
-                    <div *ngIf="f['password'].errors['minlength']">Password must be at least 8 characters</div>
-                </div>
-            </div>
-
-            <button type="submit" class="btn btn-primary btn-full mt-4">
-                Sign Up
-            </button>
-
-            <div class="auth-footer">
-                <p>Already have an account? <a routerLink="/login" class="auth-link">Log in</a></p>
-            </div>
-        </form>
-
+  <div class="auth-card glass-card animate-fadeInUp" id="signup-card">
+    <div class="auth-header">
+      <span class="auth-icon"> </span>
+      <h1 class="auth-title">Create Account</h1>
+      <p class="auth-subtitle">Join SmartStudy and start learning today</p>
     </div>
 
-    <!-- Decorative Background Elements -->
-    <div class="bg-glow blob-1"></div>
-    <div class="bg-glow blob-2"></div>
+    <form (ngSubmit)="onSignup()" class="auth-form" id="signup-form">
+      <div class="form-group">
+        <label class="form-label" for="signup-name">Full Name</label>
+        <div class="input-wrapper">
+          <span class="material-icons-round input-icon">person</span>
+          <input type="text" id="signup-name" class="form-input with-icon"
+            placeholder="John Doe" [(ngModel)]="fullName" name="fullName" required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="signup-email">Email Address</label>
+        <div class="input-wrapper">
+          <span class="material-icons-round input-icon">email</span>
+          <input type="email" id="signup-email" class="form-input with-icon"
+            placeholder="you@example.com" [(ngModel)]="email" name="email" required />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="signup-password">Password</label>
+        <div class="input-wrapper">
+          <span class="material-icons-round input-icon">lock</span>
+          <input [type]="showPassword ? 'text' : 'password'" id="signup-password" class="form-input with-icon"
+            placeholder="Create a strong password" [(ngModel)]="password" name="password" required />
+          <button type="button" class="password-toggle" (click)="togglePassword()">
+            <span class="material-icons-round">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="signup-confirm">Confirm Password</label>
+        <div class="input-wrapper">
+          <span class="material-icons-round input-icon">lock</span>
+          <input [type]="showPassword ? 'text' : 'password'" id="signup-confirm" class="form-input with-icon"
+            placeholder="Confirm your password" [(ngModel)]="confirmPassword" name="confirmPassword" required />
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-glow btn-lg full-width" id="signup-submit">
+        <span class="material-icons-round">person_add</span> Create Account
+      </button>
+    </form>
+
+    <div class="auth-footer">
+      <p>Already have an account? <a routerLink="/login" class="auth-link">Sign In</a></p>
+    </div>
+  </div>
 </div>

@@ -1,0 +1,88 @@
+<div class="ide-container">
+  
+  <div *ngIf="!session" class="loader-wrap">
+    <div class="spinner main-spinner"></div>
+  </div>
+
+  <div *ngIf="session" class="main-layout">
+    
+    <div class="sidebar glass-card">
+      <div class="sidebar-header">
+        <div class="header-left">
+          <div class="icon-box">
+            <span class="material-icons-round">menu_book</span>
+          </div>
+          <div class="title-wrap">
+            <h1>{{ session.title }}</h1>
+            <span class="status-badge">
+              <span class="material-icons-round">cloud_sync</span>
+              Live Sync Active
+            </span>
+          </div>
+        </div>
+        <button class="btn btn-outline" (click)="leaveSession()" title="Leave Session">
+          <span class="material-icons-round">exit_to_app</span>
+        </button>
+      </div>
+
+      <div class="sidebar-content">
+        <h2 class="section-title">
+          <span class="material-icons-round">task</span> Assigned Exercises
+        </h2>
+        
+        <div class="exercise-list">
+          <div *ngFor="let exercise of session.exercises; let i = index" 
+               (click)="selectExercise(i)"
+               class="exercise-item"
+               [class.active]="activeExerciseIndex === i">
+            <div class="exercise-label">
+              <span class="material-icons-round">code</span>
+              Exercise {{ i + 1 }}
+            </div>
+            <div class="exercise-text">{{ exercise }}</div>
+          </div>
+        </div>
+
+        <div *ngIf="!session.isActive" class="alert-ended">
+          <span class="material-icons-round">timer_off</span>
+          <div>
+            <strong>Session Ended</strong>
+            <span>No further changes can be tracked.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="editor-section">
+      
+      <div class="glass-card editor-card">
+        <div class="card-header">
+          <div class="file-info">
+            <span class="material-icons-round">terminal</span>
+            <span class="filename">solution.{{ getExtension(session?.language) }}</span>
+          </div>
+          <button class="btn btn-glow" (click)="executeCode()" [disabled]="isRunning || !session.isActive">
+            <span class="material-icons-round" *ngIf="!isRunning">play_circle</span>
+            <span class="spinner small-spinner" *ngIf="isRunning"></span>
+            {{ isRunning ? 'Executing...' : 'Run Code' }}
+          </button>
+        </div>
+        
+        <div class="editor-wrapper">
+          <div #editorContainer class="absolute-fill"></div>
+        </div>
+      </div>
+
+      <div class="glass-card console-card">
+        <div class="card-header console-header">
+          <div class="console-label">
+            <span class="material-icons-round">dvr</span>
+            <span>EXECUTION CONSOLE</span>
+          </div>
+        </div>
+        <div class="console-body">{{ output || 'Waiting for execution...' }}</div>
+      </div>
+
+    </div>
+  </div>
+</div>

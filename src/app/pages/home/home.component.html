@@ -1,91 +1,101 @@
-<div class="home-container">
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="logo">
-            <span class="logo-icon">🎓</span>
-            <span class="logo-text">SmartStudy</span>
-        </div>
-        <div class="nav-links">
-            <a href="#services" class="nav-link">Services</a>
-            <a href="#ai-tools" class="nav-link">AI Tools</a>
-        </div>
-        <div class="auth-buttons">
-            <a routerLink="/login" class="btn btn-outline">Log In</a>
-            <a routerLink="/signup" class="btn btn-primary">Sign Up</a>
-        </div>
-    </nav>
+<div class="home-page">
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-bg-effects">
+      <div class="hero-orb hero-orb-1"></div>
+      <div class="hero-orb hero-orb-2"></div>
+      <div class="hero-orb hero-orb-3"></div>
+    </div>
+    <div class="container hero-content">
+      <span class="hero-badge animate-fadeInUp"> The Modern Way to Learn Code</span>
+      <h1 class="hero-title animate-fadeInUp">
+        Learn to <span class="gradient-text">Code</span><br>
+        The Smart Way
+      </h1>
+      <p class="hero-subtitle animate-fadeInUp">
+        Write code, simplify PDFs, and test your skills — all in one beautiful platform.
+        Powered by modern tools for developers and learners.
+      </p>
+      <div class="hero-actions animate-fadeInUp">
+        <a routerLink="/code-editor" class="btn btn-glow btn-lg" id="hero-start-coding">
+          <span class="material-icons-round">terminal</span> Start Coding
+        </a>
+        <a routerLink="/signup" class="btn btn-secondary btn-lg" id="hero-signup">
+          <span class="material-icons-round">person_add</span> Create Account
+        </a>
+      </div>
 
-    <!-- Hero Section -->
-    <header class="hero">
-        <div class="hero-content">
-            <h1 class="hero-title">Master Any Language with <span class="highlight">AI-Powered</span> Learning</h1>
-            <p class="hero-subtitle">
-                Your personalized comfortable study hub. Learn programming, summarize dense courses, and simplify PDFs
-                instantly.
-            </p>
-            <div class="hero-actions">
-                <a routerLink="/signup" class="btn btn-large btn-primary">Start Learning for Free</a>
-                <a href="#services" class="btn btn-large btn-secondary">Explore Services</a>
-            </div>
+      <!-- Stats -->
+      <div class="hero-stats animate-fadeInUp">
+        <div class="stat-item" *ngFor="let stat of stats">
+          <span class="stat-value">{{ stat.value }}</span>
+          <span class="stat-label">{{ stat.label }}</span>
         </div>
-        <div class="hero-graphics">
-            <div class="floating-card glass-panel card-1">
-                <div class="card-icon">🧠</div>
-                <div class="card-text">AI Powered Summary</div>
-            </div>
-            <div class="floating-card glass-panel card-2">
-                <div class="card-icon">⚡</div>
-                <div class="card-text">Learn Python & JS</div>
-            </div>
-            <div class="hero-glow"></div>
-        </div>
-    </header>
+      </div>
+    </div>
+  </section>
 
-    <!-- Programming Languages Section -->
-    <section id="services" class="services-section">
-        <div class="section-header">
-            <h2 class="section-title">Programming Languages</h2>
-            <p class="section-desc">Master the world's most popular tech stacks with our interactive courses.</p>
-        </div>
+  <!-- Features Section -->
+  <section class="section features-section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge"> Features</span>
+        <h2 class="section-title">Everything You Need to <span class="gradient-text">Learn</span></h2>
+        <p class="section-subtitle">Powerful tools designed for the modern learner</p>
+      </div>
 
-        <div class="languages-grid">
-            <div class="language-card glass-panel" *ngFor="let lang of languages" [style.--glow-color]="lang.color">
-                <div class="lang-icon">{{lang.icon}}</div>
-                <h3 class="lang-name">{{lang.name}}</h3>
-                <p class="lang-desc">{{lang.description}}</p>
-            </div>
-        </div>
-    </section>
+      <div class="features-grid">
+        <a *ngFor="let feature of features; let i = index"
+           [routerLink]="feature.link"
+           class="feature-card glass-card"
+           [style.animation-delay]="(i * 0.15) + 's'"
+           [id]="'feature-' + i">
+          <div class="feature-icon-wrap" [style.background]="'linear-gradient(135deg, ' + feature.color + '22, ' + feature.color + '11)'">
+            <span class="material-icons-round feature-icon" [style.color]="feature.color">{{ feature.icon }}</span>
+          </div>
+          <h3 class="feature-title">{{ feature.title }}</h3>
+          <p class="feature-desc">{{ feature.description }}</p>
+          <span class="feature-link">
+            Explore <span class="material-icons-round">arrow_forward</span>
+          </span>
+        </a>
+      </div>
+    </div>
+  </section>
 
-    <!-- AI Features Section -->
-    <section id="ai-tools" class="ai-section">
-        <div class="section-header">
-            <h2 class="section-title">Smart AI Study Assistants</h2>
-            <p class="section-desc">Stop struggling with massive textbooks and long videos. Let AI do the heavy lifting.
-            </p>
-        </div>
+  <!-- Languages Section -->
+  <section class="section languages-section" id="languages">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-badge"> Languages</span>
+        <h2 class="section-title">Code in Your <span class="gradient-text">Favorite</span> Language</h2>
+        <p class="section-subtitle">Support for all major programming languages with syntax highlighting</p>
+      </div>
 
-        <div class="ai-features-grid">
-            <div class="ai-feature-card glass-panel" *ngFor="let feature of aiFeatures">
-                <div class="feature-icon-wrapper">
-                    <span class="feature-icon">{{feature.icon}}</span>
-                </div>
-                <div class="feature-content">
-                    <h3 class="feature-title">{{feature.title}}</h3>
-                    <p class="feature-desc">{{feature.description}}</p>
-                </div>
-            </div>
-        </div>
-    </section>
+      <div class="languages-grid">
+        <a routerLink="/code-editor" class="language-card glass-card"
+           *ngFor="let lang of languages; let i = index"
+           [style.animation-delay]="(i * 0.1) + 's'"
+           [id]="'lang-' + lang.name.toLowerCase()">
+          <img [src]="lang.icon" width="48" height="48" alt="logo" class="language-emoji" />
+          <span class="language-name">{{ lang.name }}</span>
+          <div class="language-glow" [style.background]="lang.color + '20'"></div>
+        </a>
+      </div>
+    </div>
+  </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="logo">
-                <span class="logo-icon">🎓</span>
-                <span class="logo-text">SmartStudy</span>
-            </div>
-            <p class="footer-text">© 2026 SmartStudy. All rights reserved.</p>
+  <!-- CTA Section -->
+  <section class="section cta-section">
+    <div class="container">
+      <div class="cta-card glass-card">
+        <h2 class="cta-title">Ready to Start Your <span class="gradient-text">Journey</span>?</h2>
+        <p class="cta-subtitle">Join thousands of learners and start coding today. It's free and fun!</p>
+        <div class="cta-actions">
+          <a routerLink="/signup" class="btn btn-glow btn-lg" id="cta-signup">Get Started Free</a>
+          <a routerLink="/quiz" class="btn btn-outline btn-lg" id="cta-quiz">Take a Quiz</a>
         </div>
-    </footer>
+      </div>
+    </div>
+  </section>
 </div>

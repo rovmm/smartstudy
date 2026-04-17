@@ -1,0 +1,80 @@
+<nav class="navbar" id="main-navbar">
+  <div class="navbar-container">
+    <!-- Logo -->
+    <a routerLink="/" class="navbar-logo" (click)="closeMobileMenu()">
+      <span class="logo-icon"> </span>
+      <span class="logo-text">Smart<span class="logo-accent">Study</span></span>
+    </a>
+
+    <!-- Desktop Nav Links -->
+    <div class="navbar-links" [class.active]="mobileMenuOpen">
+      <!-- Public Links (Only if not logged in) -->
+      <ng-container *ngIf="!currentUser">
+        <a routerLink="/" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()" id="nav-home">
+          <span class="material-icons-round nav-icon">home</span> Home
+        </a>
+        <a routerLink="/code-editor" routerLinkActive="active-link" (click)="closeMobileMenu()" id="nav-code-editor">
+          <span class="material-icons-round nav-icon">code</span> Code Editor
+        </a>
+        <a routerLink="/pdf-simplifier" routerLinkActive="active-link" (click)="closeMobileMenu()" id="nav-pdf">
+          <span class="material-icons-round nav-icon">picture_as_pdf</span> PDF Simplifier
+        </a>
+        <a routerLink="/quiz" routerLinkActive="active-link" (click)="closeMobileMenu()" id="nav-quiz">
+          <span class="material-icons-round nav-icon">quiz</span> Quiz
+        </a>
+      </ng-container>
+
+      <!-- Admin Links -->
+      <ng-container *ngIf="currentUser?.role === 'admin'">
+        <a routerLink="/admin/dashboard" routerLinkActive="active-link" (click)="closeMobileMenu()">
+          <span class="material-icons-round nav-icon">dashboard</span> Admin Dashboard
+        </a>
+      </ng-container>
+
+      <!-- Professor Links -->
+      <ng-container *ngIf="currentUser?.role === 'professor'">
+        <a routerLink="/professor/dashboard" routerLinkActive="active-link" (click)="closeMobileMenu()">
+          <span class="material-icons-round nav-icon">dashboard</span> My Dashboard
+        </a>
+      </ng-container>
+
+      <!-- Student Links -->
+      <ng-container *ngIf="currentUser?.role === 'student'">
+        <a routerLink="/student/dashboard" routerLinkActive="active-link" (click)="closeMobileMenu()">
+          <span class="material-icons-round nav-icon">dashboard</span> Dashboard
+        </a>
+      </ng-container>
+    </div>
+
+    <!-- Right Side -->
+    <div class="navbar-actions">
+      <!-- Theme Toggle -->
+      <button class="theme-toggle" (click)="toggleTheme()" [attr.aria-label]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'" id="theme-toggle-btn">
+        <span class="material-icons-round" *ngIf="isDarkMode">light_mode</span>
+        <span class="material-icons-round" *ngIf="!isDarkMode">dark_mode</span>
+      </button>
+
+      <!-- Auth Buttons (Not Logged In) -->
+      <ng-container *ngIf="!currentUser">
+        <a routerLink="/login" class="btn btn-secondary btn-sm" id="nav-login">Sign In</a>
+        <a routerLink="/signup" class="btn btn-primary btn-sm" id="nav-signup">Sign Up</a>
+      </ng-container>
+
+      <!-- User Profile (Logged In) -->
+      <ng-container *ngIf="currentUser">
+        <div class="user-profile">
+          <span class="user-name">{{ currentUser.name }}</span>
+          <span class="user-badge">{{ currentUser.role }}</span>
+        </div>
+        <button class="btn btn-secondary btn-sm" (click)="logout()" id="nav-logout">Logout</button>
+      </ng-container>
+
+      <!-- Mobile Hamburger -->
+      <button class="hamburger" (click)="toggleMobileMenu()" [class.open]="mobileMenuOpen" id="hamburger-btn">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+</nav>

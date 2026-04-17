@@ -1,0 +1,102 @@
+<div class="container">
+  <div *ngIf="!session" class="loader-container">
+    <div class="spinner"></div>
+  </div>
+  
+  <div *ngIf="session">
+    <div class="glass-card header-card">
+      <div class="header-content">
+        <div class="header-icon">
+          <span class="material-icons-round">live_tv</span>
+        </div>
+        <div>
+          <h1>
+            {{ session.title }}
+            <span *ngIf="session.isActive" class="live-badge">
+              <span class="pulse-dot"></span> 
+              LIVE SESSION
+            </span>
+          </h1>
+          <p class="access-code">
+            <span class="material-icons-round">vpn_key</span>
+            Access Code: <span class="code-val">{{ session.code }}</span>
+          </p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button *ngIf="session.isActive" class="btn btn-end" (click)="endSession()">
+          <span class="material-icons-round">stop_circle</span> End Session
+        </button>
+        <button class="btn btn-back" (click)="goBack()">
+          <span class="material-icons-round">dashboard</span> Dashboard
+        </button>
+      </div>
+    </div>
+
+    <div class="session-grid">
+      <div class="glass-card sidebar">
+        <h2 class="sidebar-title">
+          <span><span class="material-icons-round">groups</span> Students</span>
+          <span class="count-badge">{{ students.length }}</span>
+        </h2>
+        
+        <div *ngIf="students.length === 0" class="empty-list">
+          <span class="material-icons-round">hourglass_empty</span>
+          <p>Waiting for students...</p>
+        </div>
+        
+        <div class="student-list">
+          <div *ngFor="let s of students" 
+               (click)="selectStudent(s)"
+               class="student-item"
+               [class.active]="selectedStudent?.studentId === s.studentId">
+            <div class="student-info">
+              <div class="avatar">{{ s.studentName.charAt(0).toUpperCase() }}</div>
+              <div>
+                <div class="name">{{ s.studentName }}</div>
+                <div class="meta">{{ s.currentCode.length }} chars</div>
+              </div>
+            </div>
+            <div class="status-icons">
+              <span *ngIf="s.hasError" class="material-icons-round error">report_problem</span>
+              <span *ngIf="!s.hasError && s.currentCode.length > 0" class="material-icons-round active">edit_note</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card monitor">
+        <div *ngIf="!selectedStudent" class="monitor-placeholder">
+          <span class="material-icons-round">biotech</span>
+          <h3>Live Monitoring</h3>
+          <p>Select a student to view their work in real-time.</p>
+        </div>
+        
+        <div *ngIf="selectedStudent" class="monitor-content">
+          <div class="monitor-header">
+            <h2><span class="material-icons-round">person</span> {{ selectedStudent.studentName }}'s Workspace</h2>
+            <div class="badges">
+              <div *ngIf="selectedStudent.activeExerciseIndex !== undefined" class="badge-ex">
+                EXERCISE {{ selectedStudent.activeExerciseIndex + 1 }}
+              </div>
+              <div class="badge-sync">LIVE SYNC ACTIVE</div>
+            </div>
+          </div>
+          
+          <div class="label"><span class="material-icons-round">terminal</span> Current Code</div>
+          <div class="code-box">{{ selectedStudent.currentCode || '// Student has not started typing yet...' }}</div>
+          
+          <div *ngIf="selectedStudent.lastOutput" class="output-box" [class.error-border]="selectedStudent.hasError">
+            <div class="label">Last Execution Output</div>
+            <div class="output-text">{{ selectedStudent.lastOutput }}</div>
+          </div>
+
+          <div *ngIf="selectedStudent.hasError && selectedStudent.lastErrorAnalysis" class="ai-box">
+            <div class="ai-header"><span class="material-icons-round">psychology</span> DeepSeek AI Analysis</div>
+            <div class="ai-body">{{ selectedStudent.lastErrorAnalysis }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

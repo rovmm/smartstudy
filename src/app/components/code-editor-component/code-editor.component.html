@@ -1,0 +1,42 @@
+<div class="editor-page">
+  <div class="editor-header glass-card">
+    <div class="editor-title-section">
+      <span class="material-icons-round editor-title-icon">terminal</span>
+      <h1 class="editor-title">Code Editor</h1>
+    </div>
+
+    <div class="editor-controls">
+      <button class="btn btn-secondary btn-sm" (click)="clearOutput()" id="clear-btn" style="display: flex; align-items: center; gap: 8px;">
+         <span class="material-icons-round" style="font-size: 18px;">delete_sweep</span> 
+         Clear Console
+      </button>
+    </div>
+  </div>
+
+  <div class="editor-workspace">
+    <div class="editor-container glass-card" id="code-editor-container">
+      <div #editorHost class="modern-editor-host"></div>
+    </div>
+
+    <div class="run-section">
+      <button class="btn btn-glow btn-lg run-btn" (click)="runCode()" [disabled]="isRunning" id="run-code-btn" style="min-width: 200px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+         <span class="material-icons-round" *ngIf="!isRunning">play_arrow</span>
+         <span class="spinner" *ngIf="isRunning"></span>
+         {{ isRunning ? 'Executing Code...' : 'Run Code' }}
+       </button>
+    </div>
+
+    <div class="output-panel glass-card" *ngIf="showOutput" id="output-panel">
+      <div class="output-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span class="material-icons-round" style="color: var(--primary);">terminal</span>
+          <h3 style="margin: 0; font-size: 1.1rem;">Execution Output</h3>
+        </div>
+        <button class="output-close" (click)="clearOutput()">
+          <span class="material-icons-round">close</span>
+        </button>
+      </div>
+      <pre class="output-content" style="border-left: 4px solid var(--primary);">{{ output }}</pre>
+    </div>
+  </div>
+</div>

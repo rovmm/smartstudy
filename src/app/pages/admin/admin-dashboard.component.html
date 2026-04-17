@@ -1,0 +1,57 @@
+<div class="admin-container">
+  <header class="admin-header">
+    <h1>
+      <span class="material-icons-round">admin_panel_settings</span>
+      Platform Administration
+    </h1>
+  </header>
+
+  <div class="dashboard-grid">
+    <div class="stat-card">
+      <h3>Total Users</h3>
+      <div class="stat-number color-primary">{{ users.length }}</div>
+    </div>
+    <div class="stat-card">
+      <h3>Global Sessions</h3>
+      <div class="stat-number color-accent">{{ sessions.length }}</div>
+    </div>
+  </div>
+
+  <div class="glass-panel">
+    <div class="panel-header">
+      <span class="material-icons-round">people</span>
+      <h2>Manage Users</h2>
+    </div>
+    
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of users">
+            <td class="id-cell">{{ u.id }}</td>
+            <td>{{ u.name }}</td>
+            <td>{{ u.email }}</td>
+            <td>
+              <span class="role-badge" [style.color]="getRoleColor(u.role)">
+                {{ u.role }}
+              </span>
+            </td>
+            <td>
+              <button class="btn-delete" (click)="deleteUser(u.id)">
+                BAN / DELETE
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PdfSimplifierComponent } from './pdf-simplifier.component';
 
 describe('PdfSimplifierComponent', () => {
@@ -8,15 +7,18 @@ describe('PdfSimplifierComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PdfSimplifierComponent],
+      imports: [PdfSimplifierComponent]
     }).compileComponents();
-
     fixture = TestBed.createComponent(PdfSimplifierComponent);
     component = fixture.componentInstance;
-    await fixture.whenStable();
+    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have no file selected initially', () => {
+    expect(component.selectedFile).toBeNull();
   });
 });

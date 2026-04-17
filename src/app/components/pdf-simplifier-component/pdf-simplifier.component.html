@@ -1,81 +1,65 @@
-<div class="page-wrapper">
-
+<div class="pdf-page">
   <!-- Header -->
-  <div class="page-header">
-    <div class="header-icon">📄</div>
-    <h1>PDF Simplifier</h1>
-    <p>Upload your PDF and get an AI-generated summary instantly</p>
+  <div class="pdf-header glass-card">
+    <div class="pdf-title-section">
+      <span class="material-icons-round pdf-title-icon">picture_as_pdf</span>
+      <h1 class="pdf-title">PDF Simplifier</h1>
+    </div>
+    <p class="pdf-desc">Upload a PDF document and get a simplified summary instantly</p>
   </div>
 
-  <!-- Upload Zone -->
-  <div class="upload-zone"
-    (dragover)="onDragOver($event)"
-    (dragleave)="onDragLeave($event)"
-    (drop)="onDrop($event)"
-    [class.dragging]="isDragging"
-    (click)="fileInput.click()">
-
-    <input
-      type="file"
-      accept="application/pdf"
-      (change)="onFileSelected($event)"
-      #fileInput
-      hidden
-    />
-
-    <div class="upload-icon">☁️</div>
-    <p class="upload-title">Drag & Drop your PDF here</p>
-    <p class="upload-subtitle">or click to browse files</p>
-    <span class="upload-badge">PDF only</span>
+  <!-- Upload Area -->
+  <div class="upload-section" *ngIf="!selectedFile">
+    <div class="upload-zone glass-card"
+      [class.dragging]="isDragging"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)"
+      id="upload-zone">
+      <div class="upload-content">
+        <div class="upload-icon-wrap">
+          <span class="material-icons-round upload-icon">cloud_upload</span>
+        </div>
+        <h3 class="upload-heading">Drop your PDF here</h3>
+        <p class="upload-hint">or click to browse files</p>
+        <label class="btn btn-primary" for="file-input">
+          <span class="material-icons-round">folder_open</span> Browse Files
+        </label>
+        <input type="file" id="file-input" accept=".pdf" (change)="onFileSelect($event)" hidden />
+        <p class="upload-formats">Supports: PDF files up to 50MB</p>
+      </div>
+    </div>
   </div>
 
   <!-- File Selected -->
-  <div *ngIf="fileName && !isProcessing && !showResult" class="file-selected">
-    <span class="file-icon">📋</span>
-    <span class="file-label">{{ fileName }}</span>
-    <span class="file-check">✅</span>
-  </div>
-
-  <!-- Loading -->
-  <div *ngIf="isProcessing" class="loading-card">
-    <div class="spinner"></div>
-    <div class="loading-text">
-      <p class="loading-title">Analyzing your PDF...</p>
-      <p class="loading-sub">Our AI is reading and summarizing your document</p>
-    </div>
-  </div>
-
-  <!-- Error -->
-  <div *ngIf="errorMessage" class="error-card">
-    <span>❌</span>
-    <p>{{ errorMessage }}</p>
-  </div>
-
-  <!-- Result -->
-  <div *ngIf="showResult" class="result-card">
-    <div class="result-header">
-      <div class="result-meta">
-        <span class="meta-item">📁 {{ fileName }}</span>
-        <span class="meta-item">📄 {{ pageCount }} pages</span>
+  <div class="file-section" *ngIf="selectedFile">
+    <div class="file-info glass-card" id="file-info">
+      <div class="file-icon-wrap">
+        <span class="material-icons-round file-icon">description</span>
       </div>
-      <button class="download-btn" (click)="downloadSummary()">
-        📥 Download
-      </button>
+      <div class="file-details">
+        <h3 class="file-name">{{ fileName }}</h3>
+        <p class="file-size">{{ (selectedFile.size / 1024 / 1024).toFixed(2) }} MB</p>
+      </div>
+      <div class="file-actions">
+        <button class="btn btn-glow" (click)="processFile()" [disabled]="isProcessing" id="process-btn">
+          <span class="material-icons-round" *ngIf="!isProcessing">auto_awesome</span>
+          <span class="spinner" *ngIf="isProcessing"></span>
+          {{ isProcessing ? 'Analyzing...' : 'Simplify PDF' }}
+        </button>
+        <button class="btn btn-secondary btn-sm" (click)="clearFile()" id="clear-file-btn">
+          <span class="material-icons-round">close</span>
+        </button>
+      </div>
     </div>
 
-    <div class="result-divider"></div>
-
-    <div class="result-title">
-      ✨ AI Summary
+    <!-- Summary Result -->
+    <div class="summary-section glass-card" *ngIf="summary" id="summary-panel">
+      <div class="summary-header">
+        <span class="material-icons-round">summarize</span>
+        <h3>Summary</h3>
+      </div>
+      <pre class="summary-content">{{ summary }}</pre>
     </div>
-
-    <div class="summary-text">
-      {{ summaryText }}
-    </div>
-
-    <button class="new-btn" (click)="showResult = false; fileName = ''; summaryText = ''">
-      🔄 Summarize another PDF
-    </button>
   </div>
-
 </div>

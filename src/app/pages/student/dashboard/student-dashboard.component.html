@@ -1,0 +1,33 @@
+<div class="student-container">
+  <header class="dashboard-header">
+    <h1>
+      <span class="material-icons-round">school</span> 
+      Student Dashboard
+    </h1>
+  </header>
+
+  <div class="join-card glass-panel">
+    <div class="card-content">
+      <h2>Join a Live Coding Session</h2>
+      <p class="subtitle">Enter the 6-character session code provided by your professor.</p>
+      
+      <div class="input-group">
+        <input 
+          type="text" 
+          [(ngModel)]="sessionCode" 
+          placeholder="e.g. PY101" 
+          class="session-input" 
+          maxlength="6"
+        />
+        <button class="btn-join" (click)="joinSession()" [disabled]="!sessionCode || sessionCode.length < 3">
+          JOIN
+        </button>
+      </div>
+      
+      <div *ngIf="errorMessage" class="error-message">
+        <span class="material-icons-round">error_outline</span>
+        {{ errorMessage }}
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,76 @@
+<div class="container">
+  <h1>
+    <span class="material-icons-round title-icon">school</span> 
+    Professor Dashboard
+  </h1>
+  
+  <div class="dashboard-grid">
+    
+    <div class="glass-card main-padding">
+      <h2 class="card-title">
+        <span class="material-icons-round icon-primary">add_task</span> 
+        Create Session
+      </h2>
+      <form (ngSubmit)="onCreateSession()">
+        <div class="form-group">
+          <label class="form-label">Session Title</label>
+          <input type="text" [(ngModel)]="newSessionTitle" name="title" required class="form-input" placeholder="e.g. Logic Programming 101">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Exercises</label>
+          <div *ngFor="let prompt of newSessionPrompts; let i = index; trackBy: trackByIndex" class="exercise-row">
+            <textarea [(ngModel)]="newSessionPrompts[i]" [name]="'prompt' + i" required class="form-input" rows="2" [placeholder]="'Exercise ' + (i + 1) + ' description...'"></textarea>
+            <button type="button" *ngIf="newSessionPrompts.length > 1" (click)="removeExercise(i)" class="delete-btn">
+              <span class="material-icons-round">delete</span>
+            </button>
+          </div>
+          
+          <button type="button" (click)="addExercise()" class="btn btn-outline btn-sm add-exercise-btn">
+            <span class="material-icons-round">add</span> Add Exercise
+          </button>
+        </div>
+        
+        <button type="submit" class="btn btn-primary btn-glow full-width submit-session-btn" [disabled]="!newSessionTitle || isInvalidPrompts()">
+          <span class="material-icons-round">rocket_launch</span>
+          Start Live Session
+        </button>
+      </form>
+    </div>
+
+    <div class="glass-card main-padding">
+      <h2 class="card-title">
+        <span class="material-icons-round icon-primary">history_edu</span> 
+        Session History
+      </h2>
+      
+      <div *ngIf="mySessions.length === 0" class="empty-state">
+        <span class="material-icons-round empty-icon">sentiment_dissatisfied</span>
+        <p>You haven't created any sessions yet.</p>
+      </div>
+
+      <div *ngFor="let session of mySessions" class="session-card">
+        <div class="session-info">
+          <div class="session-header-row">
+            <h3>{{ session.title }}</h3>
+            <span *ngIf="session.isActive" class="badge badge-live">Live</span>
+            <span *ngIf="!session.isActive" class="badge badge-closed">Closed</span>
+          </div>
+          <p class="session-meta">
+            <span class="material-icons-round meta-icon">key</span>
+            <span class="session-code">{{ session.code }}</span> 
+            <span class="separator">•</span>
+            <span class="material-icons-round meta-icon">format_list_numbered</span>
+            {{ session.exercises.length }} Exercises
+          </p>
+        </div>
+        <div class="session-actions">
+          <button class="btn btn-primary btn-sm open-btn" (click)="viewSession(session.id)">
+            Open <span class="material-icons-round action-icon">arrow_forward</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
