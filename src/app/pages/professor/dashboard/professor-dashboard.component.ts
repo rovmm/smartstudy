@@ -39,7 +39,7 @@ export class ProfessorDashboardComponent implements OnInit {
         }
       });
     } else {
-      // Optionnel : rediriger si l'utilisateur n'est pas un professeur
+      
       this.router.navigate(['/login']);
     }
   }

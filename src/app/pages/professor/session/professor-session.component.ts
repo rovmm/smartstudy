@@ -29,8 +29,10 @@ export class ProfessorSessionComponent implements OnInit, OnDestroy {
     if (id) {
       this.session = this.sessionService.getSessionById(id);
       if (this.session) {
+        // Subscribe to real-time student updates
         this.sub = this.sessionService.activeStudents$.subscribe(() => {
           this.students = this.sessionService.getStudentsInSession(id);
+          // Update selected student if already selected
           if (this.selectedStudent) {
             this.selectedStudent = this.students.find(s => s.studentId === this.selectedStudent!.studentId);
           }

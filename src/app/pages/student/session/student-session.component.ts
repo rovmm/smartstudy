@@ -6,7 +6,7 @@ import { CodeExecutionService } from '../../../services/code-execution.service';
 import { AuthService } from '../../../services/auth.service';
 import { Session, StudentSession } from '../../../models/types';
 
-// Informe TypeScript que CodeMirror est chargé via index.html (CDN)
+// Declare CodeMirror to handle cases where it's loaded via CDN/index.html
 declare var CodeMirror: any;
 
 @Component({
@@ -14,7 +14,7 @@ declare var CodeMirror: any;
   standalone: true,
   imports: [CommonModule],
   templateUrl: './student-session.component.html',
-  styleUrls: ['./student-session.component.css']
+  styleUrl: './student-session.component.css'
 })
 export class StudentSessionComponent implements OnInit, AfterViewInit, OnDestroy {
   session: Session | undefined;
@@ -48,7 +48,7 @@ export class StudentSessionComponent implements OnInit, AfterViewInit, OnDestroy
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    const user = this.authService.currentUserValue;
+    const user = this.authService.currentUserValue; // Updated to currentUserValue
     
     if (id && user && user.role === 'student') {
       this.session = this.sessionService.getSessionById(id);
@@ -62,7 +62,7 @@ export class StudentSessionComponent implements OnInit, AfterViewInit, OnDestroy
         this.currentCode = this.studentData?.currentCode || `// Solution for ${this.session.title}\n\n`;
         this.editorOptions = {
           ...this.editorOptions,
-          mode: this.getMode(this.session.language),
+          mode: this.getMode(this.session.language), // Using helper method
           readOnly: !this.session.isActive ? 'nocursor' : false
         };
       }
@@ -72,7 +72,7 @@ export class StudentSessionComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit(): void {
-    // Utilisation d'un délai pour s'assurer que les scripts CDN sont prêts
+    // Delay ensures CDN scripts and view container are fully ready
     setTimeout(() => {
       if (this.session && this.editorContainer?.nativeElement && typeof CodeMirror !== 'undefined') {
         this.editorInstance = CodeMirror(this.editorContainer.nativeElement, {
@@ -121,6 +121,7 @@ export class StudentSessionComponent implements OnInit, AfterViewInit, OnDestroy
 
   async executeCode(): Promise<void> {
     if (!this.session || !this.studentData || this.isRunning) return;
+    
     this.isRunning = true;
     if (this.editorInstance) {
       this.currentCode = this.editorInstance.getValue();
@@ -129,8 +130,18 @@ export class StudentSessionComponent implements OnInit, AfterViewInit, OnDestroy
     try {
       const result = await this.codeExec.mockExecuteCode(this.session.language, this.currentCode);
       this.output = result.output;
+      
       let aiAnalysis = result.hasError ? await this.codeExec.getAiErrorAnalysis(this.currentCode, result.output) : undefined;
-      this.sessionService.updateStudentExecution(this.session.id, this.studentData.studentId, result.output, result.hasError, aiAnalysis, this.activeExerciseIndex);
+      
+      this.sessionService.updateStudentExecution(
+        this.session.id, 
+        this.studentData.studentId, 
+        result.output, 
+        result.hasError, 
+        aiAnalysis, 
+        this.activeExerciseIndex
+      );
+      
     } catch (e: any) {
       this.output = 'System error executing code.';
     } finally {
@@ -143,6 +154,13 @@ export class StudentSessionComponent implements OnInit, AfterViewInit, OnDestroy
     return map[lang || ''] || 'txt';
   }
 
-  leaveSession(): void { this.router.navigate(['/student/dashboard']); }
-  ngOnDestroy(): void { if(this.editorInstance) this.editorInstance = null; }
+  leaveSession(): void {
+    this.router.navigate(['/student/dashboard']);
+  }
+
+  ngOnDestroy(): void {
+    if (this.editorInstance) {
+      this.editorInstance = null;
+    }
+  }
 }

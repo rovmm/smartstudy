@@ -10,7 +10,7 @@ describe('StudentSessionComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        StudentSessionComponent,
+        StudentSessionComponent, 
         RouterTestingModule,
         HttpClientTestingModule
       ]

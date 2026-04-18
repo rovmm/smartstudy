@@ -9,12 +9,15 @@ describe('ProfessorSessionComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ProfessorSessionComponent, RouterTestingModule, HttpClientTestingModule]
+      imports: [ProfessorSessionComponent, RouterTestingModule, HttpClientTestingModule],
     }).compileComponents();
+
     fixture = TestBed.createComponent(ProfessorSessionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => { expect(component).toBeTruthy(); });
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

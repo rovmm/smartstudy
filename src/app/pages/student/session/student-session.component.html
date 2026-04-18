@@ -1,51 +1,42 @@
-<div class="ide-container">
-  
-  <div *ngIf="!session" class="loader-wrap">
-    <div class="spinner main-spinner"></div>
+<div class="session-wrapper">
+  <div *ngIf="!session" class="loading-state">
+    <div class="glow-spinner"></div>
   </div>
 
-  <div *ngIf="session" class="main-layout">
-    
-    <div class="sidebar glass-card">
+  <div *ngIf="session" class="session-layout">
+    <div class="glass-panel sidebar">
       <div class="sidebar-header">
-        <div class="header-left">
-          <div class="icon-box">
-            <span class="material-icons-round">menu_book</span>
-          </div>
-          <div class="title-wrap">
+        <div class="brand">
+          <div class="brand-icon"><span class="material-icons-round">menu_book</span></div>
+          <div class="brand-text">
             <h1>{{ session.title }}</h1>
-            <span class="status-badge">
-              <span class="material-icons-round">cloud_sync</span>
-              Live Sync Active
-            </span>
+            <span class="live-status"><span class="material-icons-round" style="font-size:14px">cloud_sync</span> Session Active</span>
           </div>
         </div>
-        <button class="btn btn-outline" (click)="leaveSession()" title="Leave Session">
+        <button class="btn-icon" (click)="leaveSession()" title="Leave Session">
           <span class="material-icons-round">exit_to_app</span>
         </button>
       </div>
 
-      <div class="sidebar-content">
-        <h2 class="section-title">
-          <span class="material-icons-round">task</span> Assigned Exercises
-        </h2>
+      <div class="exercises-container">
+        <h2 class="section-title"><span class="material-icons-round" style="font-size: 18px">task</span> Assigned Exercises</h2>
         
-        <div class="exercise-list">
+        <div class="exercises-list">
           <div *ngFor="let exercise of session.exercises; let i = index" 
-               (click)="selectExercise(i)"
-               class="exercise-item"
-               [class.active]="activeExerciseIndex === i">
-            <div class="exercise-label">
-              <span class="material-icons-round">code</span>
+               class="exercise-card"
+               [class.active]="activeExerciseIndex === i"
+               (click)="selectExercise(i)">
+            <div class="exercise-header">
+              <span class="material-icons-round" style="font-size: 16px">code</span>
               Exercise {{ i + 1 }}
             </div>
-            <div class="exercise-text">{{ exercise }}</div>
+            <div class="exercise-body">{{ exercise }}</div>
           </div>
         </div>
 
-        <div *ngIf="!session.isActive" class="alert-ended">
+        <div *ngIf="!session.isActive" class="alert-box alert-error">
           <span class="material-icons-round">timer_off</span>
-          <div>
+          <div class="alert-content">
             <strong>Session Ended</strong>
             <span>No further changes can be tracked.</span>
           </div>
@@ -53,36 +44,33 @@
       </div>
     </div>
 
-    <div class="editor-section">
-      
-      <div class="glass-card editor-card">
-        <div class="card-header">
-          <div class="file-info">
-            <span class="material-icons-round">terminal</span>
-            <span class="filename">solution.{{ getExtension(session?.language) }}</span>
+    <div class="workspace">
+      <div class="glass-panel editor-panel">
+        <div class="panel-header">
+          <div class="tab active">
+            <span class="material-icons-round" style="font-size: 18px">terminal</span>
+            solution.{{ getExtension(session?.language || 'txt') }}
           </div>
-          <button class="btn btn-glow" (click)="executeCode()" [disabled]="isRunning || !session.isActive">
-            <span class="material-icons-round" *ngIf="!isRunning">play_circle</span>
-            <span class="spinner small-spinner" *ngIf="isRunning"></span>
+          <button class="btn-run" (click)="executeCode()" [disabled]="isRunning || !session.isActive">
+            <span class="material-icons-round" style="font-size: 18px" *ngIf="!isRunning">play_circle</span>
+            <span class="glow-spinner small" *ngIf="isRunning"></span>
             {{ isRunning ? 'Executing...' : 'Run Code' }}
           </button>
         </div>
-        
         <div class="editor-wrapper">
-          <div #editorContainer class="absolute-fill"></div>
+          <div #editorContainer class="codemirror-host"></div>
         </div>
       </div>
 
-      <div class="glass-card console-card">
-        <div class="card-header console-header">
-          <div class="console-label">
-            <span class="material-icons-round">dvr</span>
-            <span>EXECUTION CONSOLE</span>
+      <div class="glass-panel console-panel">
+        <div class="panel-header console-header">
+          <div class="tab">
+            <span class="material-icons-round" style="font-size:18px">dvr</span>
+            EXECUTION CONSOLE
           </div>
         </div>
         <div class="console-body">{{ output || 'Waiting for execution...' }}</div>
       </div>
-
     </div>
   </div>
 </div>

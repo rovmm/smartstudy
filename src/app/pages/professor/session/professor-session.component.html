@@ -1,99 +1,129 @@
-<div class="container">
-  <div *ngIf="!session" class="loader-container">
-    <div class="spinner"></div>
+<div class="dashboard-wrapper">
+  <div *ngIf="!session" class="loading-state">
+    <div class="glow-spinner"></div>
   </div>
   
-  <div *ngIf="session">
-    <div class="glass-card header-card">
-      <div class="header-content">
-        <div class="header-icon">
+  <div *ngIf="session" class="dashboard-layout">
+    <div class="header-panel glass-panel">
+      <div class="header-left">
+        <div class="brand-icon">
           <span class="material-icons-round">live_tv</span>
         </div>
-        <div>
+        <div class="header-info">
           <h1>
             {{ session.title }}
-            <span *ngIf="session.isActive" class="live-badge">
-              <span class="pulse-dot"></span> 
-              LIVE SESSION
+            <span *ngIf="session.isActive" class="badge-live">
+              <span class="pulse-dot"></span> LIVE SESSION
             </span>
           </h1>
           <p class="access-code">
-            <span class="material-icons-round">vpn_key</span>
-            Access Code: <span class="code-val">{{ session.code }}</span>
+            <span class="material-icons-round" style="font-size:18px">vpn_key</span>
+            Access Code: <strong>{{ session.code }}</strong>
           </p>
         </div>
       </div>
       <div class="header-actions">
-        <button *ngIf="session.isActive" class="btn btn-end" (click)="endSession()">
+        <button *ngIf="session.isActive" class="btn-danger" (click)="endSession()">
           <span class="material-icons-round">stop_circle</span> End Session
         </button>
-        <button class="btn btn-back" (click)="goBack()">
+        <button class="btn-secondary" (click)="goBack()">
           <span class="material-icons-round">dashboard</span> Dashboard
         </button>
       </div>
     </div>
 
-    <div class="session-grid">
-      <div class="glass-card sidebar">
-        <h2 class="sidebar-title">
-          <span><span class="material-icons-round">groups</span> Students</span>
+    <div class="grid-panes">
+      <div class="glass-panel roster-panel">
+        <div class="panel-heading">
+          <div class="title-group">
+            <span class="material-icons-round">groups</span>
+            Students
+          </div>
           <span class="count-badge">{{ students.length }}</span>
-        </h2>
+        </div>
         
-        <div *ngIf="students.length === 0" class="empty-list">
+        <div *ngIf="students.length === 0" class="empty-state">
           <span class="material-icons-round">hourglass_empty</span>
-          <p>Waiting for students...</p>
+          <p>Waiting for students to join...</p>
         </div>
         
         <div class="student-list">
           <div *ngFor="let s of students" 
-               (click)="selectStudent(s)"
-               class="student-item"
-               [class.active]="selectedStudent?.studentId === s.studentId">
+               class="student-card"
+               [class.active]="selectedStudent?.studentId === s.studentId"
+               (click)="selectStudent(s)">
             <div class="student-info">
-              <div class="avatar">{{ s.studentName.charAt(0).toUpperCase() }}</div>
-              <div>
+              <div class="avatar">
+                {{ s.studentName.charAt(0).toUpperCase() }}
+              </div>
+              <div class="meta">
                 <div class="name">{{ s.studentName }}</div>
-                <div class="meta">{{ s.currentCode.length }} chars</div>
+                <div class="stats">
+                  <span class="material-icons-round">history</span>
+                  {{ s.currentCode.length }} chars
+                </div>
               </div>
             </div>
-            <div class="status-icons">
-              <span *ngIf="s.hasError" class="material-icons-round error">report_problem</span>
-              <span *ngIf="!s.hasError && s.currentCode.length > 0" class="material-icons-round active">edit_note</span>
+            <div class="status-wrap">
+              <span *ngIf="s.hasError" class="material-icons-round icon-error" title="Has Errors">report_problem</span>
+              <span *ngIf="!s.hasError && s.currentCode.length > 0" class="material-icons-round icon-active">edit_note</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="glass-card monitor">
-        <div *ngIf="!selectedStudent" class="monitor-placeholder">
-          <span class="material-icons-round">biotech</span>
+      <div class="glass-panel monitor-panel">
+        <div *ngIf="!selectedStudent" class="empty-state monitor-empty">
+          <span class="material-icons-round hero-icon">biotech</span>
           <h3>Live Monitoring</h3>
           <p>Select a student to view their work in real-time.</p>
+          
+          <div class="exercises-overview">
+            <h4>Current Session Exercises</h4>
+            <div *ngFor="let ex of session.exercises; let i = index" class="ex-preview">
+              {{ ex | slice:0:80 }}{{ ex.length > 80 ? '...' : '' }}
+            </div>
+          </div>
         </div>
         
         <div *ngIf="selectedStudent" class="monitor-content">
           <div class="monitor-header">
-            <h2><span class="material-icons-round">person</span> {{ selectedStudent.studentName }}'s Workspace</h2>
+            <h2>
+              <span class="material-icons-round">person</span>
+              {{ selectedStudent.studentName }}'s Workspace
+            </h2>
             <div class="badges">
-              <div *ngIf="selectedStudent.activeExerciseIndex !== undefined" class="badge-ex">
+              <div *ngIf="selectedStudent.activeExerciseIndex !== undefined" class="badge-exercise">
+                <span class="material-icons-round">edit_document</span> 
                 EXERCISE {{ selectedStudent.activeExerciseIndex + 1 }}
               </div>
-              <div class="badge-sync">LIVE SYNC ACTIVE</div>
+              <div class="badge-sync">
+                <span class="material-icons-round">sync</span> LIVE SYNC
+              </div>
             </div>
           </div>
           
-          <div class="label"><span class="material-icons-round">terminal</span> Current Code</div>
-          <div class="code-box">{{ selectedStudent.currentCode || '// Student has not started typing yet...' }}</div>
+          <div class="section-label">
+            <span class="material-icons-round">terminal</span> CURRENT CODE
+          </div>
+          <div class="code-view">
+{{ selectedStudent.currentCode || '// Student has not started typing yet...' }}
+          </div>
           
-          <div *ngIf="selectedStudent.lastOutput" class="output-box" [class.error-border]="selectedStudent.hasError">
-            <div class="label">Last Execution Output</div>
-            <div class="output-text">{{ selectedStudent.lastOutput }}</div>
+          <div *ngIf="selectedStudent.lastOutput" class="terminal-view" [class.has-error]="selectedStudent.hasError">
+            <div class="section-label">
+              <span class="material-icons-round">output</span> EXECUTION OUTPUT
+            </div>
+            <div class="terminal-output">{{ selectedStudent.lastOutput }}</div>
           </div>
 
-          <div *ngIf="selectedStudent.hasError && selectedStudent.lastErrorAnalysis" class="ai-box">
-            <div class="ai-header"><span class="material-icons-round">psychology</span> DeepSeek AI Analysis</div>
-            <div class="ai-body">{{ selectedStudent.lastErrorAnalysis }}</div>
+          <div *ngIf="selectedStudent.hasError && selectedStudent.lastErrorAnalysis" class="ai-panel">
+            <div class="ai-header">
+              <span class="material-icons-round">psychology</span> DeepSeek AI Analysis
+            </div>
+            <div class="ai-body">
+              {{ selectedStudent.lastErrorAnalysis }}
+            </div>
           </div>
         </div>
       </div>
