@@ -1,76 +1,103 @@
-<div class="container">
-  <h1>
-    <span class="material-icons-round title-icon">school</span> 
-    Professor Dashboard
-  </h1>
-  
-  <div class="dashboard-grid">
-    
-    <div class="glass-card main-padding">
-      <h2 class="card-title">
-        <span class="material-icons-round icon-primary">add_task</span> 
-        Create Session
-      </h2>
-      <form (ngSubmit)="onCreateSession()">
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <div class="header-content">
+      <span class="material-icons-round header-icon">school</span>
+      <h1>Professor Dashboard</h1>
+    </div>
+  </header>
+
+  <main class="dashboard-grid">
+    <!-- Create Session Section -->
+    <section class="glass-card create-session-card">
+      <div class="card-header">
+        <span class="material-icons-round card-icon">add_task</span>
+        <h2>Create Evaluation</h2>
+      </div>
+      
+      <form (ngSubmit)="onCreateSession()" class="session-form">
         <div class="form-group">
           <label class="form-label">Session Title</label>
-          <input type="text" [(ngModel)]="newSessionTitle" name="title" required class="form-input" placeholder="e.g. Logic Programming 101">
+          <div class="input-wrapper">
+            <span class="material-icons-round input-icon">title</span>
+            <input type="text" [(ngModel)]="newSessionTitle" name="title" required class="form-input" placeholder="e.g. Logic Programming 101">
+          </div>
         </div>
         
         <div class="form-group">
           <label class="form-label">Exercises</label>
-          <div *ngFor="let prompt of newSessionPrompts; let i = index; trackBy: trackByIndex" class="exercise-row">
-            <textarea [(ngModel)]="newSessionPrompts[i]" [name]="'prompt' + i" required class="form-input" rows="2" [placeholder]="'Exercise ' + (i + 1) + ' description...'"></textarea>
-            <button type="button" *ngIf="newSessionPrompts.length > 1" (click)="removeExercise(i)" class="delete-btn">
-              <span class="material-icons-round">delete</span>
-            </button>
+          <div class="exercises-list">
+            <div *ngFor="let prompt of newSessionPrompts; let i = index; trackBy: trackByIndex" class="exercise-item">
+              <div class="textarea-wrapper">
+                <textarea [(ngModel)]="newSessionPrompts[i]" [name]="'prompt' + i" required class="form-input" rows="2" [placeholder]="'Exercise ' + (i + 1) + ' description...'"></textarea>
+              </div>
+              <button type="button" *ngIf="newSessionPrompts.length > 1" (click)="removeExercise(i)" class="btn-remove" title="Remove Exercise">
+                <span class="material-icons-round">delete_outline</span>
+              </button>
+            </div>
           </div>
           
-          <button type="button" (click)="addExercise()" class="btn btn-outline btn-sm add-exercise-btn">
-            <span class="material-icons-round">add</span> Add Exercise
+          <button type="button" (click)="addExercise()" class="btn btn-outline-dashed">
+            <span class="material-icons-round">add</span>
+            Add Another Exercise
           </button>
         </div>
         
-        <button type="submit" class="btn btn-primary btn-glow full-width submit-session-btn" [disabled]="!newSessionTitle || isInvalidPrompts()">
+        <button type="submit" class="btn btn-primary btn-glow" [disabled]="!newSessionTitle || isInvalidPrompts()">
           <span class="material-icons-round">rocket_launch</span>
-          Start Session
+          Create
         </button>
       </form>
-    </div>
+    </section>
 
-    <div class="glass-card main-padding">
-      <h2 class="card-title">
-        <span class="material-icons-round icon-primary">history_edu</span> 
-        Session History
-      </h2>
+    <!-- Session History Section -->
+    <section class="glass-card history-card">
+      <div class="card-header">
+        <span class="material-icons-round card-icon">history_edu</span>
+        <h2> History</h2>
+      </div>
       
-      <div *ngIf="mySessions.length === 0" class="empty-state">
-        <span class="material-icons-round empty-icon">sentiment_dissatisfied</span>
-        <p>You haven't created any sessions yet.</p>
-      </div>
+      <div class="history-content">
+        <div *ngIf="mySessions.length === 0" class="empty-state">
+          
+          <p>You haven't created any sessions yet.</p>
+        </div>
 
-      <div *ngFor="let session of mySessions" class="session-card">
-        <div class="session-info">
-          <div class="session-header-row">
-            <h3>{{ session.title }}</h3>
-            <span *ngIf="session.isActive" class="badge badge-live">Live</span>
-            <span *ngIf="!session.isActive" class="badge badge-closed">Closed</span>
+        <div class="session-items">
+          <div *ngFor="let session of mySessions" class="session-item-card">
+            <div class="session-info">
+              <div class="session-title-line">
+                <h3>{{ session.title }}</h3>
+                <span [class]="'status-badge ' + (session.isActive ? 'status-live' : 'status-closed')">
+                  {{ session.isActive ? 'Live' : 'Closed' }}
+                </span>
+              </div>
+              
+              <div class="session-meta">
+                <div class="meta-item code-badge">
+                  <span class="material-icons-round">key</span>
+                  <code>{{ session.code }}</code>
+                </div>
+                <div class="meta-divider"></div>
+                <div class="meta-item">
+                  <span class="material-icons-round">format_list_numbered</span>
+                  <span>{{ session.exercises.length }} Exercises</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="session-actions">
+              <button class="btn btn-action-primary" (click)="viewSession(session.id)">
+                <span>Open</span>
+                <span class="material-icons-round">arrow_forward</span>
+              </button>
+              <button class="btn btn-action-secondary" (click)="duplicateSession(session)">
+                <span class="material-icons-round">content_copy</span>
+                <span>Duplicate</span>
+              </button>
+            </div>
           </div>
-          <p class="session-meta">
-            <span class="material-icons-round meta-icon">key</span>
-            <span class="session-code">{{ session.code }}</span> 
-            <span class="separator">•</span>
-            <span class="material-icons-round meta-icon">format_list_numbered</span>
-            {{ session.exercises.length }} Exercises
-          </p>
-        </div>
-        <div class="session-actions">
-          <button class="btn btn-primary btn-sm open-btn" (click)="viewSession(session.id)">
-            Open <span class="material-icons-round action-icon">arrow_forward</span>
-          </button>
         </div>
       </div>
-    </div>
-    
-  </div>
+    </section>
+  </main>
 </div>

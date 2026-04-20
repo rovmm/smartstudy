@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './professor-session.component.html',
-  styleUrls: ['./professor-session.component.css']
+  styleUrl: './professor-session.component.css'
 })
 export class ProfessorSessionComponent implements OnInit, OnDestroy {
   session: Session | undefined;

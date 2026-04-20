@@ -4,6 +4,7 @@
   </div>
   
   <div *ngIf="session" class="dashboard-layout">
+    <!-- Session Header -->
     <div class="header-panel glass-panel">
       <div class="header-left">
         <div class="brand-icon">
@@ -13,7 +14,7 @@
           <h1>
             {{ session.title }}
             <span *ngIf="session.isActive" class="badge-live">
-              <span class="pulse-dot"></span> LIVE SESSION
+              <span class="pulse-dot"></span> 
             </span>
           </h1>
           <p class="access-code">
@@ -24,7 +25,7 @@
       </div>
       <div class="header-actions">
         <button *ngIf="session.isActive" class="btn-danger" (click)="endSession()">
-          <span class="material-icons-round">stop_circle</span> End Session
+          <span class="material-icons-round">stop_circle</span> END
         </button>
         <button class="btn-secondary" (click)="goBack()">
           <span class="material-icons-round">dashboard</span> Dashboard
@@ -33,6 +34,7 @@
     </div>
 
     <div class="grid-panes">
+      <!-- Left: Students List -->
       <div class="glass-panel roster-panel">
         <div class="panel-heading">
           <div class="title-group">
@@ -72,57 +74,89 @@
         </div>
       </div>
 
+      <!-- Right: Student Monitor View -->
       <div class="glass-panel monitor-panel">
         <div *ngIf="!selectedStudent" class="empty-state monitor-empty">
           <span class="material-icons-round hero-icon">biotech</span>
-          <h3>Live Monitoring</h3>
+          
           <p>Select a student to view their work in real-time.</p>
           
           <div class="exercises-overview">
             <h4>Current Session Exercises</h4>
             <div *ngFor="let ex of session.exercises; let i = index" class="ex-preview">
+              <span class="ex-number">{{ i + 1 }}</span>
               {{ ex | slice:0:80 }}{{ ex.length > 80 ? '...' : '' }}
             </div>
           </div>
         </div>
         
         <div *ngIf="selectedStudent" class="monitor-content">
+          <!-- Student Header -->
           <div class="monitor-header">
             <h2>
               <span class="material-icons-round">person</span>
               {{ selectedStudent.studentName }}'s Workspace
             </h2>
             <div class="badges">
-              <div *ngIf="selectedStudent.activeExerciseIndex !== undefined" class="badge-exercise">
-                <span class="material-icons-round">edit_document</span> 
-                EXERCISE {{ selectedStudent.activeExerciseIndex + 1 }}
-              </div>
               <div class="badge-sync">
-                <span class="material-icons-round">sync</span> LIVE SYNC
+                <span class="material-icons-round">sync</span> 
               </div>
             </div>
-          </div>
-          
-          <div class="section-label">
-            <span class="material-icons-round">terminal</span> CURRENT CODE
-          </div>
-          <div class="code-view">
-{{ selectedStudent.currentCode || '// Student has not started typing yet...' }}
-          </div>
-          
-          <div *ngIf="selectedStudent.lastOutput" class="terminal-view" [class.has-error]="selectedStudent.hasError">
-            <div class="section-label">
-              <span class="material-icons-round">output</span> EXECUTION OUTPUT
-            </div>
-            <div class="terminal-output">{{ selectedStudent.lastOutput }}</div>
           </div>
 
-          <div *ngIf="selectedStudent.hasError && selectedStudent.lastErrorAnalysis" class="ai-panel">
-            <div class="ai-header">
-              <span class="material-icons-round">psychology</span> DeepSeek AI Analysis
-            </div>
-            <div class="ai-body">
-              {{ selectedStudent.lastErrorAnalysis }}
+          <!-- All Exercises -->
+          <div class="all-exercises">
+            <div *ngFor="let ex of session.exercises; let i = index" class="exercise-block">
+
+              <!-- Exercise Title Row -->
+              <div class="exercise-title-row">
+                <div class="exercise-tag">
+                  <span class="material-icons-round"> </span>
+                  Exercise {{ i + 1 }}
+                  <span *ngIf="selectedStudent.activeExerciseIndex === i" class="tag-active">● Active</span>
+                </div>
+                <div class="exercise-status-badges">
+                  <span *ngIf="selectedStudent.exercisesData && selectedStudent.exercisesData[i]?.hasError"
+                        class="badge-error">
+                    <span class="material-icons-round">error_outline</span> Error
+                  </span>
+                  <span *ngIf="selectedStudent.exercisesData && selectedStudent.exercisesData[i]?.output && !selectedStudent.exercisesData[i]?.hasError"
+                        class="badge-ok">
+                    <span class="material-icons-round">check_circle_outline</span> Ran
+                  </span>
+                </div>
+              </div>
+
+              <!-- Exercise Prompt -->
+              <div class="exercise-prompt">{{ ex }}</div>
+
+              <!-- Student Code -->
+              <div class="section-label">
+                <span class="material-icons-round">terminal</span> CODE
+              </div>
+              <div class="code-view">{{ (selectedStudent.exercisesData && selectedStudent.exercisesData[i]?.code) || '// No code yet...' }}</div>
+
+              <!-- Output if present -->
+              <ng-container *ngIf="selectedStudent.exercisesData && selectedStudent.exercisesData[i]?.output">
+                <div class="section-label">
+                  <span class="material-icons-round">output</span> OUTPUT
+                </div>
+                <div class="terminal-view"
+                     [class.has-error]="selectedStudent.exercisesData[i]?.hasError">
+                  <div class="terminal-output">{{ selectedStudent.exercisesData[i]?.output }}</div>
+                </div>
+
+                <!-- AI error analysis -->
+                <div *ngIf="selectedStudent.exercisesData[i]?.hasError && selectedStudent.exercisesData[i]?.lastErrorAnalysis"
+                     class="ai-panel">
+                  <div class="ai-panel::before"></div>
+                  <div class="ai-header">
+                    <span class="material-icons-round">psychology</span> DeepSeek AI Analysis
+                  </div>
+                  <div class="ai-body">{{ selectedStudent.exercisesData[i]?.lastErrorAnalysis }}</div>
+                </div>
+              </ng-container>
+
             </div>
           </div>
         </div>

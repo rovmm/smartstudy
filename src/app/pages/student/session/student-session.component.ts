@@ -48,7 +48,7 @@ export class StudentSessionComponent implements OnInit, AfterViewInit, OnDestroy
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    const user = this.authService.currentUserValue; // Updated to currentUserValue
+    const user = this.authService.currentUserValue;
     
     if (id && user && user.role === 'student') {
       this.session = this.sessionService.getSessionById(id);
@@ -59,10 +59,11 @@ export class StudentSessionComponent implements OnInit, AfterViewInit, OnDestroy
           this.activeExerciseIndex = this.studentData.activeExerciseIndex || 0;
         }
 
+        // Initialize component data based on session
         this.currentCode = this.studentData?.currentCode || `// Solution for ${this.session.title}\n\n`;
         this.editorOptions = {
           ...this.editorOptions,
-          mode: this.getMode(this.session.language), // Using helper method
+          mode: this.session.language === 'html' ? 'xml' : (this.session.language === 'cpp' ? 'text/x-c++src' : this.session.language),
           readOnly: !this.session.isActive ? 'nocursor' : false
         };
       }
@@ -72,31 +73,27 @@ export class StudentSessionComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit(): void {
-    // Delay ensures CDN scripts and view container are fully ready
-    setTimeout(() => {
-      if (this.session && this.editorContainer?.nativeElement && typeof CodeMirror !== 'undefined') {
-        this.editorInstance = CodeMirror(this.editorContainer.nativeElement, {
-          ...this.editorOptions,
-          value: this.currentCode
-        });
+    if (this.session && this.editorContainer && this.editorContainer.nativeElement) {
+      this.editorInstance = CodeMirror(this.editorContainer.nativeElement, {
+        ...this.editorOptions,
+        value: this.currentCode
+      });
 
-        this.editorInstance.on('change', () => {
-          this.currentCode = this.editorInstance.getValue();
-          this.onCodeChange(this.currentCode);
-        });
-        
+      this.editorInstance.on('change', () => {
+        this.currentCode = this.editorInstance.getValue();
+        this.onCodeChange(this.currentCode);
+      });
+      
+      // Delay refresh logic to allow flex container expansion
+      setTimeout(() => {
         this.editorInstance.refresh();
-      }
-    }, 150);
-  }
-
-  private getMode(lang: string | undefined): string {
-    const map: any = { html: 'xml', cpp: 'text/x-c++src', java: 'text/x-java' };
-    return map[lang || ''] || lang || 'javascript';
+      }, 100);
+    }
   }
 
   onCodeChange(newCode: string): void {
     if (this.session && this.studentData) {
+      // Sync code to "server" in real-time
       this.sessionService.updateStudentCode(this.session.id, this.studentData.studentId, newCode, this.activeExerciseIndex);
     }
   }
@@ -113,16 +110,27 @@ export class StudentSessionComponent implements OnInit, AfterViewInit, OnDestroy
         this.output = updatedData.lastOutput || '';
         if (this.editorInstance) {
           this.editorInstance.setValue(this.currentCode);
-          setTimeout(() => this.editorInstance.refresh(), 10);
         }
       }
     }
+  }
+
+  ngOnDestroy(): void {
+    if (this.editorInstance) {
+      // Optional: Cleanup logic depending on codemirror instance
+    }
+  }
+
+  getExtension(lang: string): string {
+    const map: any = { javascript: 'js', python: 'py', html: 'html', css: 'css', java: 'java', cpp: 'cpp', php: 'php' };
+    return map[lang] || 'txt';
   }
 
   async executeCode(): Promise<void> {
     if (!this.session || !this.studentData || this.isRunning) return;
     
     this.isRunning = true;
+    // ensure latest code is retrieved
     if (this.editorInstance) {
       this.currentCode = this.editorInstance.getValue();
     }
@@ -131,16 +139,14 @@ export class StudentSessionComponent implements OnInit, AfterViewInit, OnDestroy
       const result = await this.codeExec.mockExecuteCode(this.session.language, this.currentCode);
       this.output = result.output;
       
-      let aiAnalysis = result.hasError ? await this.codeExec.getAiErrorAnalysis(this.currentCode, result.output) : undefined;
+      let aiAnalysis = undefined;
+      // Mock DeepSeek AI Analysis if there's an error
+      if (result.hasError) {
+        aiAnalysis = await this.codeExec.getAiErrorAnalysis(this.currentCode, result.output);
+      }
       
-      this.sessionService.updateStudentExecution(
-        this.session.id, 
-        this.studentData.studentId, 
-        result.output, 
-        result.hasError, 
-        aiAnalysis, 
-        this.activeExerciseIndex
-      );
+      // Update state for professor view
+      this.sessionService.updateStudentExecution(this.session.id, this.studentData.studentId, result.output, result.hasError, aiAnalysis, this.activeExerciseIndex);
       
     } catch (e: any) {
       this.output = 'System error executing code.';
@@ -149,18 +155,7 @@ export class StudentSessionComponent implements OnInit, AfterViewInit, OnDestroy
     }
   }
 
-  getExtension(lang: string | undefined): string {
-    const map: any = { javascript: 'js', python: 'py', html: 'html', css: 'css', java: 'java', cpp: 'cpp', php: 'php' };
-    return map[lang || ''] || 'txt';
-  }
-
   leaveSession(): void {
     this.router.navigate(['/student/dashboard']);
-  }
-
-  ngOnDestroy(): void {
-    if (this.editorInstance) {
-      this.editorInstance = null;
-    }
   }
 }

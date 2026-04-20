@@ -33,7 +33,7 @@ export class CodeExecutionService {
 
         // Simulating correct outputs
         resolve({
-          output: `✅ [${language.toUpperCase()}] Code compiled and executed successfully.\n\nSimulated output:\nHello World!\nExecution finished in 0.04s`,
+          output: `return actual output`,
           hasError: false
         });
       }, 1000); // simulate network latency

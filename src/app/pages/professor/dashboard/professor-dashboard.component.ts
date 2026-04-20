@@ -11,7 +11,7 @@ import { Session } from '../../../models/types';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './professor-dashboard.component.html',
-  styleUrls: ['./professor-dashboard.component.css']
+  styleUrl: './professor-dashboard.component.css'
 })
 export class ProfessorDashboardComponent implements OnInit {
   mySessions: Session[] = [];
@@ -26,21 +26,13 @@ export class ProfessorDashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Utilisation de currentUserValue au lieu de currentUser
     const user = this.authService.currentUserValue;
-    
     if (user && user.role === 'professor') {
       this.mySessions = this.sessionService.getProfessorSessions(user.id);
-      
-      // On s'abonne aux changements de sessions pour mettre à jour la liste
+      // Listen for updates
       this.sessionService.sessions$.subscribe(() => {
-        if (user) {
-          this.mySessions = this.sessionService.getProfessorSessions(user.id);
-        }
+        this.mySessions = this.sessionService.getProfessorSessions(user.id);
       });
-    } else {
-      
-      this.router.navigate(['/login']);
     }
   }
 
@@ -49,11 +41,7 @@ export class ProfessorDashboardComponent implements OnInit {
   }
 
   removeExercise(index: number): void {
-    if (this.newSessionPrompts.length > 1) {
-      this.newSessionPrompts.splice(index, 1);
-    } else {
-      this.newSessionPrompts[0] = '';
-    }
+    this.newSessionPrompts.splice(index, 1);
   }
 
   trackByIndex(index: number): number {
@@ -61,7 +49,7 @@ export class ProfessorDashboardComponent implements OnInit {
   }
 
   isInvalidPrompts(): boolean {
-    return this.newSessionPrompts.length === 0 || this.newSessionPrompts.some(p => !p || !p.trim());
+    return this.newSessionPrompts.length === 0 || this.newSessionPrompts.some(p => !p.trim());
   }
 
   onCreateSession(): void {
@@ -72,7 +60,7 @@ export class ProfessorDashboardComponent implements OnInit {
         user.name,
         this.newSessionTitle,
         this.newSessionPrompts,
-        'javascript'
+        'javascript' // Default to javascript as we removed the choice
       );
       this.router.navigate(['/professor/session', session.id]);
     }
@@ -80,5 +68,11 @@ export class ProfessorDashboardComponent implements OnInit {
 
   viewSession(sessionId: string): void {
     this.router.navigate(['/professor/session', sessionId]);
+  }
+
+  duplicateSession(session: Session): void {
+    this.newSessionTitle = session.title + ' (Copy)';
+    this.newSessionPrompts = [...session.exercises];
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }

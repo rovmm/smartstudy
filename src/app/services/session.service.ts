@@ -8,37 +8,10 @@ import { AuthService } from './auth.service';
 })
 export class SessionService {
   // Mock global sessions database
-  private sessions: Session[] = [
-    {
-      id: 's_1',
-      code: 'PY101',
-      professorId: 'u_prof1',
-      professorName: 'Prof. Alan Turing',
-      title: 'Python Basics: Fibonacci',
-      exercises: ['Write a Python function `fibonacci(n)` that returns the nth number in the sequence. Then print the first 10 numbers.'],
-      language: 'python',
-      isActive: true,
-      createdAt: new Date(Date.now() - 3600000) // 1 hour ago
-    }
-  ];
+  private sessions: Session[] = [];
 
   // Mock global student participations
-  private activeStudents: StudentSession[] = [
-    {
-      sessionId: 's_1',
-      studentId: 'u_stud1',
-      studentName: 'Ada Lovelace',
-      currentCode: 'def fibonacci(n):\n    if n <= 1:\n        return n\n    return fibonacci(n - 1) + fibonacci(n - 2)',
-      lastOutput: '',
-      hasError: false,
-      activeExerciseIndex: 0,
-      exercisesData: [
-        { code: 'def fibonacci(n):\n    if n <= 1:\n        return n\n    return fibonacci(n - 1) + fibonacci(n - 2)', output: '', hasError: false }
-      ],
-      isCompleted: false,
-      joinedAt: new Date()
-    }
-  ];
+  private activeStudents: StudentSession[] = [];
 
   // Subjects for reactive updates
   private sessionsSubject = new BehaviorSubject<Session[]>(this.sessions);

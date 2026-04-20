@@ -4,13 +4,14 @@
   </div>
 
   <div *ngIf="session" class="session-layout">
+    <!-- Sidebar -->
     <div class="glass-panel sidebar">
       <div class="sidebar-header">
         <div class="brand">
           <div class="brand-icon"><span class="material-icons-round">menu_book</span></div>
           <div class="brand-text">
             <h1>{{ session.title }}</h1>
-            <span class="live-status"><span class="material-icons-round" style="font-size:14px">cloud_sync</span> Session Active</span>
+            <span class="live-status"><span class="material-icons-round" style="font-size:14px">cloud_sync</span> </span>
           </div>
         </div>
         <button class="btn-icon" (click)="leaveSession()" title="Leave Session">
@@ -44,12 +45,14 @@
       </div>
     </div>
 
+    <!-- Main Workspace -->
     <div class="workspace">
+      <!-- Code Editor -->
       <div class="glass-panel editor-panel">
         <div class="panel-header">
           <div class="tab active">
             <span class="material-icons-round" style="font-size: 18px">terminal</span>
-            solution.{{ getExtension(session?.language || 'txt') }}
+            solution
           </div>
           <button class="btn-run" (click)="executeCode()" [disabled]="isRunning || !session.isActive">
             <span class="material-icons-round" style="font-size: 18px" *ngIf="!isRunning">play_circle</span>
@@ -62,6 +65,7 @@
         </div>
       </div>
 
+      <!-- Console -->
       <div class="glass-panel console-panel">
         <div class="panel-header console-header">
           <div class="tab">
