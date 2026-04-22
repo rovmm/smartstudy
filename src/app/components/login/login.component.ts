@@ -27,7 +27,7 @@ export class LoginComponent {
     if (this.email && this.password) {
       // In a real app, this would validate credentials via backend
       console.log('Login attempt', { email: this.email });
-      alert('This is a demo. Please use the "Fast Demo Login" buttons below to test roles.');
+      
     }
   }
 
